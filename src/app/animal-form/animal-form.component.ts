@@ -22,7 +22,11 @@ export enum Gender {
 export class AnimalFormComponent implements OnInit {
 saveToIndexedDB(_t7: { name: string; control: import("@angular/forms").AbstractControl<any,any>; }) {
   this.IDBService.addAnimal(_t7.control.value as Animal)
-    .then(id => console.log('Animal saved with ID:', id))
+    .then(id => {
+      // TODO: reload the saved animals? 
+    
+      console.log('Animal saved with ID:', id)
+    })
     .catch(error => console.error('Could not save animal:', error));
 
 }
@@ -36,10 +40,23 @@ reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<an
 
   constructor(private fb: FormBuilder, private formService: FormService, private IDBService: IndexedDBService) {}
 
+
+  randNames = [
+    "Fluffy",
+    "Spot",
+    "Rex",
+    "Whiskers",
+    "Buddy",
+    "Mittens",
+    "Max",
+    "Luna"
+  ]
+
+
   ngOnInit() {
     // Generate random attributes for the two animals
-    const animalAttributes1 = this.generateRandomAnimal();
-    const animalAttributes2 = this.generateRandomAnimal();
+    const animalAttributes1 = {...this.generateRandomAnimal(), name: this.randNames[Math.floor(Math.random() * this.randNames.length)]};
+    const animalAttributes2 = {...this.generateRandomAnimal(), name: this.randNames[Math.floor(Math.random() * this.randNames.length)]};
   
     // Create the form with two animal inputs initialized with random attributes
     this.form = this.fb.group({

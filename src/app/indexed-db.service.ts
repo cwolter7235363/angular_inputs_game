@@ -1,65 +1,143 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IndexedDBService {
-  private db!: IDBDatabase;
+  private dbSubject = new BehaviorSubject<IDBDatabase | null>(null);
   private dbName: string = 'MyAppDB';
   private storeName: string = 'animals';
 
   constructor() {
-    this.initDB();
+    this.initDB().then(db => {
+      this.dbSubject.next(db);
+    }).catch(error => {
+      console.error('Failed to initialize IndexedDB:', error);
+    });
   }
 
-  private initDB() {
-    const request = indexedDB.open(this.dbName, 1);
-
-    request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
-      this.db = request.result;
-      if (!this.db.objectStoreNames.contains(this.storeName)) {
-        this.db.createObjectStore(this.storeName, { keyPath: 'uuid' });
-      }
-    };
-
-    request.onsuccess = (event: Event) => {
-      this.db = request.result;
-    };
-
-    request.onerror = (event: Event) => {
-      console.error('IndexedDB error:', request.error);
-    };
-  }
-
-  addAnimal(animal: any): Promise<IDBValidKey> {
+  private initDB(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
-      const transaction = this.db.transaction(this.storeName, 'readwrite');
-      const store = transaction.objectStore(this.storeName);
-      const request = store.add(animal);
-  
-      request.onsuccess = () => {
-        resolve(request.result); // Now correctly typed as IDBValidKey
+      const request = indexedDB.open(this.dbName, 1);
+
+      request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
+        const db = request.result;
+        if (!db.objectStoreNames.contains(this.storeName)) {
+          db.createObjectStore(this.storeName, { keyPath: 'uuid' });
+        }
       };
-  
-      request.onerror = () => {
+
+      request.onsuccess = (event: Event) => {
+        resolve(request.result);
+      };
+
+      request.onerror = (event: Event) => {
         reject(request.error);
       };
     });
   }
 
-  getAnimal(id: number): Promise<any> {
+  get db$() {
+    return this.dbSubject.asObservable();
+  }
+  private getDBPromise(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
-      const transaction = this.db.transaction(this.storeName, 'readonly');
-      const store = transaction.objectStore(this.storeName);
-      const request = store.get(id);
+      // Immediately initialize the subscription to avoid undefined errors
+      const sub = this.dbSubject.subscribe(db => {
+        if (db) {
+          resolve(db);
+        }
+      }, error => {
+        reject(error);
+        if (sub) {
+          sub.unsubscribe();
+        }
+      });
+    });
+  }
 
-      request.onsuccess = () => {
-        resolve(request.result);
-      };
+  addAnimal(animal: any): Promise<IDBValidKey> {
+    // First, ensure that the animal object has a 'uuid' property.
+    if (!animal.uuid) {
+      // Immediately return a rejected promise of the correct type.
+      // Since the function expects a Promise<IDBValidKey>, but we're in an error state,
+      // we cast the rejection reason to any to bypass TypeScript's type checking.
+      return Promise.reject("Animal object must have a 'uuid' property.") as Promise<IDBValidKey>;
+    }
+  
+    return this.getDBPromise().then(db => {
+      if (!db) {
+        // Similar to above, cast the rejection reason to match the expected return type.
+        throw new Error('Database connection is not available.');
+      }
+  
+      return new Promise<IDBValidKey>((resolve, reject) => {
+        const transaction = db.transaction(this.storeName, 'readwrite');
+        const store = transaction.objectStore(this.storeName);
+        const request = store.add(animal);
+  
+        request.onsuccess = () => {
+          resolve(request.result);
+        };
+  
+        request.onerror = () => {
+          reject(request.error);
+        };
+  
+        // Handle transaction errors.
+        transaction.onerror = (event) => {
+          reject((event.target as IDBRequest).error);
+        };
+  
+        // Handle the case where the transaction completes successfully but the request fails.
+        transaction.oncomplete = () => {
+          if (request.error) {
+            reject(request.error);
+          }
+        };
+      });
+    }).catch(error => {
+      console.error('Failed to add animal:', error);
+      // Here, instead of re-throwing the error, we return a rejected promise of the correct type.
+      // This ensures that the catch block conforms to the function's return type.
+      return Promise.reject(error) as Promise<IDBValidKey>;
+    });
+  }
 
-      request.onerror = () => {
-        reject(request.error);
-      };
+  loadAllAnimals(): Promise<any[]> {
+    return this.getDBPromise().then(db => {
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(this.storeName, 'readonly');
+        const store = transaction.objectStore(this.storeName);
+        const request = store.getAll();
+
+        request.onsuccess = () => {
+          resolve(request.result);
+        };
+
+        request.onerror = () => {
+          reject(request.error);
+        };
+      });
+    });
+  }
+
+  getAnimal(uuid: string): Promise<any> {
+    return this.getDBPromise().then(db => {
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(this.storeName, 'readonly');
+        const store = transaction.objectStore(this.storeName);
+        const request = store.get(uuid);
+
+        request.onsuccess = () => {
+          resolve(request.result);
+        };
+
+        request.onerror = () => {
+          reject(request.error);
+        };
+      });
     });
   }
 
