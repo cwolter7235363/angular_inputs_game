@@ -1,0 +1,7 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- Existing form controls -->
+  <ng-container *ngFor="let key of formControlsArray">
+    <app-attribute-input [controlKey]="key.name" [formRef]="form"></app-attribute-input>
+  </ng-container>
+  <button type="submit">Submit</button>
+  </form>

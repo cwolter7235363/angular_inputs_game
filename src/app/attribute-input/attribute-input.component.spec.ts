@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MainComponent } from './main.component';
+import { AttributeInputComponent } from './attribute-input.component';
 
-describe('MainComponent', () => {
-  let component: MainComponent;
-  let fixture: ComponentFixture<MainComponent>;
+describe('AttributeInputComponent', () => {
+  let component: AttributeInputComponent;
+  let fixture: ComponentFixture<AttributeInputComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MainComponent]
+      imports: [AttributeInputComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(MainComponent);
+    fixture = TestBed.createComponent(AttributeInputComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
