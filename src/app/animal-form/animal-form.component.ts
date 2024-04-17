@@ -5,6 +5,7 @@ import { FormService } from '../form-service.service';
 import { AttributeInputComponent } from '../attribute-input/attribute-input.component';
 import { CommonModule } from '@angular/common';
 import { Animal, AttributeShape, Attributes, CombatSkillShape } from '../../types';
+import { IndexedDBService } from '../indexed-db.service';
 
 
 export enum Gender {
@@ -19,11 +20,21 @@ export enum Gender {
   imports: [ReactiveFormsModule, AttributeInputComponent, CommonModule]
 })
 export class AnimalFormComponent implements OnInit {
+saveToIndexedDB(_t7: { name: string; control: import("@angular/forms").AbstractControl<any,any>; }) {
+  this.IDBService.addAnimal(_t7.control.value as Animal)
+    .then(id => console.log('Animal saved with ID:', id))
+    .catch(error => console.error('Could not save animal:', error));
+
+}
+reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<any,any>; }) {
+    const newRandomAnimal = this.generateRandomAnimal();
+    _t7.control.setValue(newRandomAnimal);
+}
   form: FormGroup = new FormGroup({});
   stringifiedForm: any;
   
 
-  constructor(private fb: FormBuilder, private formService: FormService) {}
+  constructor(private fb: FormBuilder, private formService: FormService, private IDBService: IndexedDBService) {}
 
   ngOnInit() {
     // Generate random attributes for the two animals

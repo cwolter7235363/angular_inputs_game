@@ -14,8 +14,6 @@ import { v4 as uuidv4 } from 'uuid';
   </form>
   <!-- Display the value of the input field outside of the input -->
   <p>Born on {{formRef.controls[controlKey]?.value?.birthTimestamp | date: 'medium'}}</p> <!-- Use async pipe to subscribe to mountTime -->
-  
-  
   <ng-template #elseBlock>No value</ng-template>
   <!-- Displaying the parent form's value -->
   <!-- This line might not be necessary if you're displaying individual control values -->
@@ -32,9 +30,7 @@ import { v4 as uuidv4 } from 'uuid';
   ]
 })
 export class AttributeInputComponent implements ControlValueAccessor, OnInit  {
-  nameControl = new FormControl('');
   parentForm: ControlContainer | null = null; // Changed type to ControlContainer
-  quantity = 0;
   mountTime: BehaviorSubject<Date | undefined> = new BehaviorSubject<Date | undefined>(undefined); // Change to BehaviorSubject
   @Input() formRef: FormGroup = new FormGroup({} as any);
   @Input() controlKey: string = '';
@@ -68,13 +64,7 @@ export class AttributeInputComponent implements ControlValueAccessor, OnInit  {
   disabled = false;
 
   writeValue(value: any) {
-
-      // Add the birthTimestamp attribute with the current date-time
-      value.birthTimestamp = new Date().toISOString();
-
-      this.formRef.controls[this.controlKey].setValue(value);
-
-  
+    this.onChange(value);
   }
 
   registerOnChange(onChange: any) {

@@ -2,6 +2,8 @@
     <!-- Existing form controls -->
   <ng-container *ngFor="let key of formControlsArray">
     <app-attribute-input [controlKey]="key.name" [formRef]="form"></app-attribute-input>
+    <button (click)="reroll(key)">Reroll monster</button>
+    <button (click)="saveToIndexedDB(key)">Save to IndexedDB</button>
   </ng-container>
   <button type="submit">Submit</button>
   </form>
