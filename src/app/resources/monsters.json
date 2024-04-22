@@ -1,0 +1,98 @@
+[{
+    "name": "Rancor",
+    "species": "Terentatek",
+    "homeworld": "Dathomir",
+    "description": "Large, carnivorous reptilian creature with immense strength and size, often used as a beast of combat.",
+    "image_url": "https://example.com/rancor.jpg"
+  },
+  {
+    "name": "Wampa",
+    "species": "Wampa",
+    "homeworld": "Hoth",
+    "description": "Snow-dwelling predator with white fur and sharp claws, known for attacking unwary travelers on Hoth.",
+    "image_url": "https://static.wikia.nocookie.net/starwars/images/d/d0/SkywalkerWampa.jpg"
+  },
+  {
+    "name": "Sarlacc",
+    "species": "Sarlacc",
+    "homeworld": "Tatooine",
+    "description": "Immense, carnivorous plant-like creature living in the Great Pit of Carkoon, slowly digesting its prey over centuries.",
+    "image_url": "https://example.com/sarlacc.jpg"
+  },
+  {
+    "name": "Acklay",
+    "species": "Reek",
+    "homeworld": "Geonosis",
+    "description": "Large, insectoid creature with sharp claws and a deadly tail, used in Geonosian arenas for combat.",
+    "image_url": "https://example.com/acklay.jpg"
+  },
+  {
+    "name": "Dianoga",
+    "species": "Dianoga",
+    "homeworld": "Various",
+    "description": "Giant, tentacled monster typically found in garbage compactors, with a single eye atop its stalk.",
+    "image_url": "https://example.com/dianoga.jpg"
+  },
+  {
+    "name": "Krayt Dragon",
+    "species": "Krayt Dragon",
+    "homeworld": "Tatooine",
+    "description": "Massive, reptilian predator native to Tatooine, feared by locals for its size and ferocity.",
+    "image_url": "https://example.com/krayt_dragon.jpg"
+  },
+  {
+    "name": "Nexu",
+    "species": "Nexu",
+    "homeworld": "Cholganna",
+    "description": "Agile, feline creature with sharp teeth and claws, often used as a hunting beast.",
+    "image_url": "https://static.wikia.nocookie.net/starwars/images/0/0a/Nexu2-SWE.png"
+  },
+  {
+    "name": "Varactyl",
+    "species": "Varactyl",
+    "homeworld": "Utapau",
+    "description": "Lizard-like creature known for its climbing abilities and loyalty, native to Utapau.",
+    "image_url": "https://example.com/varactyl.jpg"
+  },
+  {
+    "name": "Mynock",
+    "species": "Mynock",
+    "homeworld": "Various",
+    "description": "Bat-like creature that feeds on energy, often found in space aboard starships and asteroids.",
+    "image_url": "https://example.com/mynock.jpg"
+  },
+  {
+    "name": "Womp Rat",
+    "species": "Tatooine Womp Rat",
+    "homeworld": "Tatooine",
+    "description": "Rodent-like creature known for its scavenging habits and sometimes aggressive behavior.",
+    "image_url": "https://example.com/womp_rat.jpg"
+  },
+  {
+    "name": "Dewback",
+    "species": "Dewback",
+    "homeworld": "Tatooine",
+    "description": "Reptilian mount used by the inhabitants of Tatooine, adapted to desert environments.",
+    "image_url": "https://example.com/dewback.jpg"
+  },
+  {
+    "name": "Razorcrest",
+    "species": "Various",
+    "homeworld": "Various",
+    "description": "Armed starship piloted by bounty hunters, equipped with advanced weaponry and stealth technology.",
+    "image_url": "https://example.com/razorcrest.jpg"
+  },
+  {
+    "name": "Gizka",
+    "species": "Gizka",
+    "homeworld": "Various",
+    "description": "Small, amphibious creatures known for their rapid reproduction and ability to infest starships.",
+    "image_url": "https://example.com/gizka.jpg"
+  },
+  {
+    "name": "Rakghoul",
+    "species": "Rakghoul",
+    "homeworld": "Taris",
+    "description": "Mutated humanoid creature infected by a virus, aggressive and dangerous.",
+    "image_url": "https://example.com/rakghoul.jpg"
+  }]

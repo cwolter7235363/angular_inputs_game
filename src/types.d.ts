@@ -2,6 +2,14 @@ import { Gender } from "./app/animal-form/animal-form.component";
 
 export type Animal = Attributes & {
     name: string;
+    image_url: string;
+}
+
+type SpeciesInfo = {
+name: string;
+species: string;
+description: string;
+image_url: string;
 }
 
 type AttributeShape = "small" | "medium" | "large" | "light" | "heavy" | "muscular" | "slim" | "bulky" | "slow" | "average" | "fast" | "low" | "moderate" | "high";
@@ -15,6 +23,7 @@ type RarityAndClassShape = "common" | "rare" | "legendary" | "elite" | "boss";
 type BreedingMechanicsShape = "speciesA" | "speciesB" | "bonus1" | "bonus2";
 
 interface Attributes {
+  species: SpeciesInfo;
   physical: {
     gender: Gender;
     size: AttributeShape;

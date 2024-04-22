@@ -7,19 +7,21 @@ import { IndexedDBService } from './app/indexed-db.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
-    selector: 'app-root',
-    standalone: true,
-    template: `
+  selector: 'app-root',
+  standalone: true,
+  template: `
+  <div class="star-wars-theme">
+  <h1>Ruk´s Animal Hoe</h1>
     <app-animal-form/>
-    <a target="_blank" href="https://angular.dev/overview">
+    <a target="_blank" href="https://angular.dev/overview" class="learn-more-link">
       Learn more about Angular
     </a>
     <ul *ngIf="animals">
-    <li *ngFor="let animal of animals">{{ animal }}</li>
-  </ul>
-
+      <li *ngFor="let animal of animals">{{ animal }}</li>
+    </ul>
+  </div>
   `,
-    imports: [AnimalFormComponent, AttributeInputComponent, CommonModule]
+  imports: [AnimalFormComponent, AttributeInputComponent, CommonModule]
 })
 export class App implements OnInit{
   animals: any[] = [];

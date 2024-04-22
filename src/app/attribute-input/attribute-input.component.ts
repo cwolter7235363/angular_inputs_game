@@ -3,31 +3,20 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor, ControlContainer, NgForm, NgCo
 import { CommonModule, NgIf } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
+import { MonsterCardComponent } from "../monster-card/monster-card.component";
 
 @Component({
-  selector: 'app-attribute-input',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  template: `
-  <form [formGroup]="formRef">
-    <input style="visibility: hidden" type="text" [formControlName]="controlKey">
-  </form>
-  <!-- Display the value of the input field outside of the input -->
-  <p>Born on {{formRef.controls[controlKey]?.value?.birthTimestamp | date: 'medium'}}</p> <!-- Use async pipe to subscribe to mountTime -->
-  <ng-template #elseBlock>No value</ng-template>
-  <!-- Displaying the parent form's value -->
-  <!-- This line might not be necessary if you're displaying individual control values -->
-  <p *ngIf="parentForm?.value">Stringified Value: {{ formRef.controls[controlKey]?.value | json }}</p>
-
-  <p *ngIf="controlKey">Control Key: {{ controlKey }}</p>
-  `,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      multi:true,
-      useExisting: forwardRef(() => AttributeInputComponent),
-    }
-  ]
+    selector: 'app-attribute-input',
+    standalone: true,
+    templateUrl: './attribute-input.component.html',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            multi: true,
+            useExisting: forwardRef(() => AttributeInputComponent),
+        }
+    ],
+    imports: [CommonModule, ReactiveFormsModule, MonsterCardComponent]
 })
 export class AttributeInputComponent implements ControlValueAccessor, OnInit  {
   parentForm: ControlContainer | null = null; // Changed type to ControlContainer

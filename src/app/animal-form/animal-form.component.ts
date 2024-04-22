@@ -6,7 +6,7 @@ import { AttributeInputComponent } from '../attribute-input/attribute-input.comp
 import { CommonModule } from '@angular/common';
 import { Animal, AttributeShape, Attributes, CombatSkillShape } from '../../types';
 import { IndexedDBService } from '../indexed-db.service';
-
+import MonsterData from "../resources/monsters.json";
 
 export enum Gender {
   MALE,
@@ -32,7 +32,7 @@ saveToIndexedDB(_t7: { name: string; control: import("@angular/forms").AbstractC
 }
 reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<any,any>; }) {
     const newRandomAnimal = this.generateRandomAnimal();
-    _t7.control.setValue(newRandomAnimal);
+    _t7.control.setValue({name: this.randNames[Math.floor(Math.random() * this.randNames.length)], ...newRandomAnimal});
 }
   form: FormGroup = new FormGroup({});
   stringifiedForm: any;
@@ -73,6 +73,7 @@ reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<an
   
   generateRandomAnimal(): Attributes {
     return {
+      species: this.getRandomElement(MonsterData),
       physical: {
         gender: this.getRandomElement([Gender.MALE, Gender.FEMALE]),
         size: this.getRandomElement(["small", "medium", "large"]) as AttributeShape,
