@@ -69,3 +69,7 @@ interface Attributes {
     breedingBonuses: BreedingMechanicsShape[];
   };
 }
+
+interface ErrorMessages {
+  [key: string]: string;
+}

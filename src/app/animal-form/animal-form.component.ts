@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { Animal, AttributeShape, Attributes, CombatSkillShape } from '../../types';
 import { IndexedDBService } from '../indexed-db.service';
 import MonsterData from "../resources/monsters.json";
+import { genderMismatchValidator } from '../validators/GenderMismatchValidator';
+import { speciesMismatchValidator } from '../validators/SpeciesMismatchValidator';
 
 export enum Gender {
   MALE,
@@ -17,6 +19,7 @@ export enum Gender {
   selector: 'app-animal-form',
   standalone: true,
   templateUrl: './animal-form.component.html',
+  styleUrls: ['./animal-form.component.css'],
   imports: [ReactiveFormsModule, AttributeInputComponent, CommonModule]
 })
 export class AnimalFormComponent implements OnInit {
@@ -41,6 +44,8 @@ reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<an
   constructor(private fb: FormBuilder, private formService: FormService, private IDBService: IndexedDBService) {}
 
 
+  
+
   randNames = [
     "Fluffy",
     "Spot",
@@ -62,7 +67,7 @@ reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<an
     this.form = this.fb.group({
       animalInput1: new FormControl(animalAttributes1),
       animalInput2: new FormControl(animalAttributes2),
-    });
+    }, { validators: [genderMismatchValidator, speciesMismatchValidator] });
   
     this.formService.setFormGroup(this.form);
   }
@@ -70,7 +75,18 @@ reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<an
   getRandomElement<T>(array: T[]): T {
     return array[Math.floor(Math.random() * array.length)];
   }
+
+  formErrors = {
+    'genderMismatch': 'Animals cannot be of the same gender.',
+    'speciesMismatch': 'These species are not compatible.'
+  };
+   
+  getFormErrorKeys() {
+    return Object.keys(this.form.errors || {});
+  }
   
+
+
   generateRandomAnimal(): Attributes {
     return {
       species: this.getRandomElement(MonsterData),

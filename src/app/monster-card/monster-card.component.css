@@ -46,7 +46,7 @@
     background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for readability */
     padding: 10px;
     border-radius: 5px;
-    display: flex;
+    /* display: flex; */
     align-items: center;
 }
 

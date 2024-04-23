@@ -1,9 +1,21 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <!-- Existing form controls -->
-  <ng-container *ngFor="let key of formControlsArray">
+    <div *ngFor="let error of formErrors | keyvalue" style="display: flex">
+      <div *ngIf="form.errors?.[error.key]" class="error-message">
+        <h2>{{ error.value }}</h2>
+      </div>
+    </div>
+
+    <div *ngIf="!form.invalid">
+      <button type="submit" class="button button-primary" style="display: block" [disabled]="!form.valid">Submit</button>
+    </div>
+
+
+
+    <ng-container *ngFor="let key of formControlsArray">
+    
+
     <app-attribute-input [controlKey]="key.name" [formRef]="form"></app-attribute-input>
-    <button (click)="reroll(key)">Reroll monster</button>
-    <button (click)="saveToIndexedDB(key)">Save to IndexedDB</button>
+    <button class="button button-warning" (click)="reroll(key)">Reroll monster</button>
+    <button class="button button-secondary" (click)="saveToIndexedDB(key)">Save to IndexedDB</button>
   </ng-container>
-  <button type="submit">Submit</button>
   </form>
