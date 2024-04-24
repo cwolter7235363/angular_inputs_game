@@ -14,8 +14,9 @@
     border: 2px solid #feda4a; /* Add a border to highlight the card */
 }
 
-.monster-card:hover {
-    transform: scale(1.05);
+.selected {
+    transform: scale(1.02);
+    border: 2px dotted #feda4a; /* Add a border to highlight the card */
     box-shadow: 0 8px 16px rgba(254, 218, 74, 0.6); /* Brighter and larger shadow on hover */
 }
 
