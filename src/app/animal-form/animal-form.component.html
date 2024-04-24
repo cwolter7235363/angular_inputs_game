@@ -1,11 +1,12 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <button class="button button-secondary" (click)="addRandomAnimal($event)">Add monster</button>
     <div *ngFor="let error of formErrors | keyvalue" style="display: flex">
       <div *ngIf="form.errors?.[error.key]" class="error-message">
         <h2>{{ error.value }}</h2>
       </div>
     </div>
 
-    <div *ngIf="!form.invalid">
+    <div *ngIf="!form.invalid && (formControlsArray.length === 2)">
       <button type="submit" class="button button-primary" style="display: block" [disabled]="!form.valid">Submit</button>
     </div>
 

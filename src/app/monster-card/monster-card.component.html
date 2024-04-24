@@ -1,7 +1,7 @@
 <div (click)="onMonsterClick()" [class.selected]="selectionService.isSelected(monster)" class="monster-card">
     <div>
         <img [src]="monster?.species?.image_url" alt="{{monster?.name}}" class="monster-image">
-        <h2>{{monster?.name}}</h2> <h2>{{monster?.species?.name}}</h2>
+        <h2>{{monster?.name}}</h2> <h2>{{monster?.species?.name}}</h2> <h2>{{getGenderString(monster?.physical?.gender)}}</h2>
     </div>
     <div class="attributes-grid">
         <div class="attribute-item">
@@ -52,5 +52,8 @@
             <div><span class="attribute-icon breeding-cooldown"></span><span class="attribute">Breeding Cooldown:</span></div>
             <div>{{monster?.breeding?.breedingCooldown}} hours</div>
         </div>
+    </div>
+    <div>
+        <button class="button button-danger" (click)="releaseMonster($event)">Release</button>
     </div>
 </div>

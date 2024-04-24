@@ -3,6 +3,7 @@ import { Gender } from "./app/animal-form/animal-form.component";
 export type Animal = Attributes & {
     name: string;
     image_url: string;
+    uuid: string;
 }
 
 type SpeciesInfo = {

@@ -141,5 +141,42 @@ export class IndexedDBService {
     });
   }
 
-  // Implement updateAnimal and deleteAnimal methods similarly
+  deleteAnimal(uuid: string): Promise<void> {
+    return this.getDBPromise().then(db => {
+      if (!db) {
+        throw new Error('Database connection is not available.');
+      }
+  
+      return new Promise<void>((resolve, reject) => {
+        const transaction = db.transaction(this.storeName, 'readwrite');
+        const store = transaction.objectStore(this.storeName);
+        const request = store.delete(uuid);
+  
+        request.onsuccess = () => {
+          resolve();
+        };
+  
+        request.onerror = () => {
+          reject(request.error);
+        };
+  
+        // Handle transaction errors.
+        transaction.onerror = (event) => {
+          reject((event.target as IDBRequest).error);
+        };
+  
+        // Handle the case where the transaction completes successfully but the request fails.
+        transaction.oncomplete = () => {
+          if (request.error) {
+            reject(request.error);
+          }
+        };
+      });
+    }).catch(error => {
+      console.error('Failed to delete animal:', error);
+      // Here, instead of re-throwing the error, we return a rejected promise of the correct type.
+      // This ensures that the catch block conforms to the function's return type.
+      return Promise.reject(error);
+    });
+  }
 }

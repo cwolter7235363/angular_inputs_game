@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { Animal } from '../../types';
 import { MonsterSelectionService } from '../service/monster-selection-service/monster-selection-service.service';
+import { Gender } from '../animal-form/animal-form.component';
+import { IndexedDBService } from '../indexed-db.service';
 
 @Component({
   selector: 'app-monster-card',
@@ -11,7 +13,7 @@ import { MonsterSelectionService } from '../service/monster-selection-service/mo
 export class MonsterCardComponent {
   @Input() monster: Animal | undefined = undefined;
 
-  constructor(protected selectionService: MonsterSelectionService) {}
+  constructor(protected selectionService: MonsterSelectionService, private IDBService: IndexedDBService) {}
 
   onMonsterClick(): void {
     if (this.monster) {
@@ -19,5 +21,26 @@ export class MonsterCardComponent {
       console.log('Monster clicked:', this.monster);
       // Additional logic can be added here if needed
     }
+  }
+
+  releaseMonster(event: MouseEvent): void {
+    event.stopPropagation(); // Prevent click event from bubbling up to the parent div
+    if (this.monster && confirm(`Are you sure you want to release ${this.monster.name}?`)) {
+        this.IDBService.deleteAnimal(this.monster.uuid)
+            .then(() => {
+                console.log('Monster released:', this.monster);
+                // Additional logic can be added here if needed
+            })
+            .catch(error => {
+                console.error('Failed to release monster:', error);
+            });
+    }
+}
+
+  getGenderString(gender?: Gender): string {
+    if (!gender) return ""
+    
+    
+    return Gender[gender]; // This converts the enum value to its string representation
   }
 }

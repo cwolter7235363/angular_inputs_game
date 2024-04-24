@@ -9,6 +9,9 @@ import { IndexedDBService } from '../indexed-db.service';
 import MonsterData from "../resources/monsters.json";
 import { genderMismatchValidator } from '../validators/GenderMismatchValidator';
 import { speciesMismatchValidator } from '../validators/SpeciesMismatchValidator';
+import { MonsterSelectionService } from '../service/monster-selection-service/monster-selection-service.service';
+import { AnimalService } from '../animal-service.service';
+import { v4 as uuidv4 } from 'uuid';
 
 export enum Gender {
   MALE,
@@ -41,8 +44,7 @@ reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<an
   stringifiedForm: any;
   
 
-  constructor(private fb: FormBuilder, private formService: FormService, private IDBService: IndexedDBService) {}
-
+  constructor(protected monsterSelectionService: MonsterSelectionService, private fb: FormBuilder, private formService: FormService, private IDBService: IndexedDBService, private animalService: AnimalService) {}
 
   
 
@@ -57,20 +59,40 @@ reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<an
     "Luna"
   ]
 
-
   ngOnInit() {
-    // Generate random attributes for the two animals
-    const animalAttributes1 = {...this.generateRandomAnimal(), name: this.randNames[Math.floor(Math.random() * this.randNames.length)]};
-    const animalAttributes2 = {...this.generateRandomAnimal(), name: this.randNames[Math.floor(Math.random() * this.randNames.length)]};
+    this.monsterSelectionService.getSelectedMonstersObservable().subscribe(selectedMonsters => {
+      // Initialize an empty form group
+      this.form = this.fb.group({}, { validators: [genderMismatchValidator, speciesMismatchValidator] });
   
-    // Create the form with two animal inputs initialized with random attributes
-    this.form = this.fb.group({
-      animalInput1: new FormControl(animalAttributes1),
-      animalInput2: new FormControl(animalAttributes2),
-    }, { validators: [genderMismatchValidator, speciesMismatchValidator] });
+      // Check if the first monster is selected and add it to the form if it's not null
+      if (selectedMonsters.length > 0 && selectedMonsters[0] !== null) {
+        this.form.addControl('animalInput1', new FormControl(selectedMonsters[0]));
+      }
   
-    this.formService.setFormGroup(this.form);
+      // Check if the second monster is selected and add it to the form if it's not null
+      if (selectedMonsters.length > 1 && selectedMonsters[1] !== null) {
+        this.form.addControl('animalInput2', new FormControl(selectedMonsters[1]));
+      }
+  
+      // Set the form group in the form service
+      this.formService.setFormGroup(this.form);
+    });
   }
+
+
+  // ngOnInit() {
+  //   // Generate random attributes for the two animals
+  //   const animalAttributes1 = {...this.generateRandomAnimal(), name: this.randNames[Math.floor(Math.random() * this.randNames.length)]};
+  //   const animalAttributes2 = {...this.generateRandomAnimal(), name: this.randNames[Math.floor(Math.random() * this.randNames.length)]};
+  
+  //   // Create the form with two animal inputs initialized with random attributes
+  //   this.form = this.fb.group({
+  //     animalInput1: new FormControl(animalAttributes1),
+  //     animalInput2: new FormControl(animalAttributes2),
+  //   }, { validators: [genderMismatchValidator, speciesMismatchValidator] });
+  
+  //   this.formService.setFormGroup(this.form);
+  // }
 
   getRandomElement<T>(array: T[]): T {
     return array[Math.floor(Math.random() * array.length)];
@@ -86,6 +108,13 @@ reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<an
   }
   
 
+  addRandomAnimal($event: MouseEvent) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    this.animalService.addAnimal({...this.generateRandomAnimal(), uuid: uuidv4()
+      ,name: this.randNames[Math.floor(Math.random() * this.randNames.length)]})
+  
+  }
 
   generateRandomAnimal(): Attributes {
     return {

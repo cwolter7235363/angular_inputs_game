@@ -3,7 +3,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import 'zone.js';
 import { AnimalFormComponent } from "./app/animal-form/animal-form.component";
 import { AttributeInputComponent } from "./app/attribute-input/attribute-input.component";
-import { IndexedDBService } from './app/indexed-db.service';
+import { AnimalService } from './app/animal-service.service'; // Import AnimalService
 import { CommonModule } from '@angular/common';
 import { MonsterCardComponent } from "./app/monster-card/monster-card.component";
 
@@ -26,23 +26,21 @@ import { MonsterCardComponent } from "./app/monster-card/monster-card.component"
   `,
     imports: [AnimalFormComponent, AttributeInputComponent, CommonModule, MonsterCardComponent]
 })
-export class App implements OnInit{
+export class App implements OnInit {
   animals: any[] = [];
   name = 'Angular';
-  constructor(private IDBService: IndexedDBService) {}
+
+  constructor(private animalService: AnimalService) {} // Use AnimalService
+
   ngOnInit(): void {
-    this.IDBService.loadAllAnimals()
-    .then(animals => {
-      console.log('Loaded animals:', animals);
+    this.animalService.animals$.subscribe(animals => {
       this.animals = animals;
+      console.log('Loaded animals:', animals);
       // Process or display the animals as needed
-    })
-    .catch(error => {
+    }, error => {
       console.error('Failed to load animals:', error);
     });
   }
-
-
 }
 
 bootstrapApplication(App);
