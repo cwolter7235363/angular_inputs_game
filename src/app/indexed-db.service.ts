@@ -179,4 +179,48 @@ export class IndexedDBService {
       return Promise.reject(error);
     });
   }
+
+  updateRecord(record: {uuid: string}): Promise<void> {
+    // Ensure that the animal object has a 'uuid' property.
+    if (!record.uuid) {
+      return Promise.reject("Animal object must have a 'uuid' property.") as Promise<void>;
+    }
+  
+    return this.getDBPromise().then(db => {
+      if (!db) {
+        throw new Error('Database connection is not available.');
+      }
+  
+      return new Promise<void>((resolve, reject) => {
+        const transaction = db.transaction(this.storeName, 'readwrite');
+        const store = transaction.objectStore(this.storeName);
+        const request = store.put(record); // 'put' updates an existing record or adds a new one if it doesn't exist
+  
+        request.onsuccess = () => {
+          resolve();
+        };
+  
+        request.onerror = () => {
+          reject(request.error);
+        };
+  
+        // Handle transaction errors.
+        transaction.onerror = (event) => {
+          reject((event.target as IDBRequest).error);
+        };
+  
+        // Handle the case where the transaction completes successfully but the request fails.
+        transaction.oncomplete = () => {
+          if (request.error) {
+            reject(request.error);
+          }
+        };
+      });
+    }).catch(error => {
+      console.error('Failed to update animal:', error);
+      // Here, instead of re-throwing the error, we return a rejected promise of the correct type.
+      // This ensures that the catch block conforms to the function's return type.
+      return Promise.reject(error);
+    });
+  }
 }

@@ -27,12 +27,13 @@ export class MonsterCardComponent {
   releaseMonster(event: MouseEvent): void {
     event.stopPropagation(); // Prevent click event from bubbling up to the parent div
     if (this.monster && confirm(`Are you sure you want to release ${this.monster.name}?`)) {
-      this.AnimalService.deleteAnimal(this.monster.uuid)  
+      this.AnimalService.deleteAnimal(this.monster.uuid)
+      this.selectionService.deselectMonster(this.monster);
     }
 }
 
   getGenderString(gender?: Gender): string {
-    if (!gender) return ""
+    if (gender === undefined) return ""
     
     
     return Gender[gender]; // This converts the enum value to its string representation

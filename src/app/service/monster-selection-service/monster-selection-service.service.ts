@@ -44,6 +44,10 @@ export class MonsterSelectionService {
     return this.selectedMonstersSubject.asObservable();
   }
 
+  getSelectedMonsters(): Animal[] {
+    return this.selectedMonsters;
+  }
+
   isSelected(monster?: Animal): boolean {
     if (!monster) return false;
     return this.selectedMonsters.includes(monster);

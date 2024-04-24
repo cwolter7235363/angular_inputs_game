@@ -41,4 +41,12 @@ export class AnimalService {
       console.error('Failed to delete animal:', error);
     });
   }
+
+  updateAnimal(animal: any) {
+    this.indexedDBService.updateRecord(animal).then(() => {
+      this.loadInitialData(); // Reload the animals list to reflect the update
+    }).catch(error => {
+      console.error('Failed to update animal:', error);
+    });
+  }
 }
