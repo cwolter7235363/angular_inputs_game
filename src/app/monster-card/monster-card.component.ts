@@ -3,6 +3,7 @@ import { Animal } from '../../types';
 import { MonsterSelectionService } from '../service/monster-selection-service/monster-selection-service.service';
 import { Gender } from '../animal-form/animal-form.component';
 import { IndexedDBService } from '../indexed-db.service';
+import { AnimalService } from '../animal-service.service';
 
 @Component({
   selector: 'app-monster-card',
@@ -13,7 +14,7 @@ import { IndexedDBService } from '../indexed-db.service';
 export class MonsterCardComponent {
   @Input() monster: Animal | undefined = undefined;
 
-  constructor(protected selectionService: MonsterSelectionService, private IDBService: IndexedDBService) {}
+  constructor(protected selectionService: MonsterSelectionService, private IDBService: IndexedDBService, protected AnimalService: AnimalService) {}
 
   onMonsterClick(): void {
     if (this.monster) {
@@ -26,14 +27,7 @@ export class MonsterCardComponent {
   releaseMonster(event: MouseEvent): void {
     event.stopPropagation(); // Prevent click event from bubbling up to the parent div
     if (this.monster && confirm(`Are you sure you want to release ${this.monster.name}?`)) {
-        this.IDBService.deleteAnimal(this.monster.uuid)
-            .then(() => {
-                console.log('Monster released:', this.monster);
-                // Additional logic can be added here if needed
-            })
-            .catch(error => {
-                console.error('Failed to release monster:', error);
-            });
+      this.AnimalService.deleteAnimal(this.monster.uuid)  
     }
 }
 

@@ -17,11 +17,9 @@ import { MonsterCardComponent } from "./app/monster-card/monster-card.component"
     <a target="_blank" href="https://angular.dev/overview" class="learn-more-link">
       Learn more about Angular
     </a>
-    <ul *ngIf="animals">
-      
+    <div *ngIf="animals" class="flex flex-col gap-5">
     <app-monster-card *ngFor="let beast of animals" [monster]="beast"></app-monster-card>
-      <li *ngFor="let animal of animals">{{ animal }}</li>
-    </ul>
+    </div>
   </div>
   `,
     imports: [AnimalFormComponent, AttributeInputComponent, CommonModule, MonsterCardComponent]
