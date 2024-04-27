@@ -1,4 +1,5 @@
 <div (click)="onMonsterClick()" [class.selected]="selectionService.isSelected(monster)" class="monster-card">
+    <p>{{monster?.uuid}}</p>
     <div>
         <img [src]="monster?.species?.image_url" alt="{{monster?.name}}" class="monster-image">
         <h2>{{monster?.name}}</h2> <h2>{{monster?.species?.name}}</h2> <h2>{{getGenderString(monster?.physical?.gender)}}</h2>

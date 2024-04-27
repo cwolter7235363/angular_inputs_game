@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { IndexedDBService } from './indexed-db.service';
+import { MonsterSelectionService } from './service/monster-selection-service/monster-selection-service.service';
+import { BreedingPod } from '../types';
+import { BreedingServiceService } from './breeding-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,9 +11,15 @@ import { IndexedDBService } from './indexed-db.service';
 export class AnimalService {
   private animalsSubject = new BehaviorSubject<any[]>([]);
   public animals$ = this.animalsSubject.asObservable();
+  private filteredAnimalsSubject = new BehaviorSubject<any[]>([]);
+  public filteredAnimals$ = this.filteredAnimalsSubject.asObservable();
+  private breedingAnimalsSubject = new BehaviorSubject<BreedingPod[]>([]);
+  public breedingAnimals$ = this.breedingAnimalsSubject.asObservable();
 
-  constructor(private indexedDBService: IndexedDBService) {
+
+  constructor(private indexedDBService: IndexedDBService, private selectionService: MonsterSelectionService, private breedingService: BreedingServiceService) {
     this.loadInitialData();
+    this.initializeFilteredAnimals();
   }
 
   private async loadInitialData() {
@@ -21,6 +30,17 @@ export class AnimalService {
       console.error('Failed to load animals from IndexedDB:', error);
     }
   }
+
+  private initializeFilteredAnimals() {
+    combineLatest([this.animals$, this.selectionService.getSelectedMonstersObservable(), this.breedingService.breedingPods$])
+      .subscribe(([animals, selectedMonsters, breedingPods]) => {
+        const breedingMonsters = breedingPods.flatMap(pod => pod.parents); // Flatten all monsters in pods
+        // Filter out selected and breeding animals
+        const filtered = animals.filter(animal => !selectedMonsters.includes(animal) && !breedingMonsters.find(m => m.uuid === animal.uuid));
+        this.filteredAnimalsSubject.next(filtered);
+      });
+  }
+
 
   addAnimal(animal: any) {
     this.indexedDBService.addAnimal(animal).then(() => {
@@ -36,6 +56,11 @@ export class AnimalService {
 
   deleteAnimal(uuid: string) {
     this.indexedDBService.deleteAnimal(uuid).then(() => {
+      // remove the animal from the selection service
+      this.selectionService.deselectMonster(this.selectionService.getSelectedMonsters().find(animal => animal.uuid === uuid));
+      // remove the animal from the list of animals and or the filtered animals
+      this.selectionService.getSelectedMonsters().find(animal => animal.uuid === uuid) ? this.loadInitialData() : this.filteredAnimalsSubject.next(this.filteredAnimalsSubject.getValue().filter(animal => animal.uuid !== uuid));
+      
       this.loadInitialData(); // Reload the animals list to reflect the deletion
     }).catch(error => {
       console.error('Failed to delete animal:', error);

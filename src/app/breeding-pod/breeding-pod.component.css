@@ -1,0 +1,14 @@
+.pod-container {
+  padding: 1rem; /* Adjust the padding as needed */
+  background: #262424; /* Background color of the container */
+  border: 5px solid #ccc; /* Outer border color and width */
+  position: relative;
+  margin: 1rem; /* Space around the container */
+}
+
+.inner-border {
+  padding: 10px; /* Adjust based on desired inner border width */
+  border: 5px solid #ddd; /* Inner border color and width */
+  border-radius: 8px; /* Optional: if you want rounded corners */
+  /* Add any additional styling here */
+}

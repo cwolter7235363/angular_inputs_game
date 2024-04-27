@@ -12,6 +12,8 @@ import { speciesMismatchValidator } from '../validators/SpeciesMismatchValidator
 import { MonsterSelectionService } from '../service/monster-selection-service/monster-selection-service.service';
 import { AnimalService } from '../animal-service.service';
 import { v4 as uuidv4 } from 'uuid';
+import { randSuperheroName } from '@ngneat/falso';
+import { BreedingServiceService } from '../breeding-service.service';
 
 export enum Gender {
   MALE,
@@ -38,26 +40,22 @@ saveToIndexedDB(_t7: { name: string; control: import("@angular/forms").AbstractC
 }
 reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<any,any>; }) {
     const newRandomAnimal = this.generateRandomAnimal();
-    _t7.control.setValue({name: this.randNames[Math.floor(Math.random() * this.randNames.length)], ...newRandomAnimal});
+    _t7.control.setValue({name: randSuperheroName(), ...newRandomAnimal});
 }
   form: FormGroup = new FormGroup({});
   stringifiedForm: any;
   
 
-  constructor(protected monsterSelectionService: MonsterSelectionService, private fb: FormBuilder, private formService: FormService, private IDBService: IndexedDBService, private animalService: AnimalService) {}
+  constructor(protected monsterSelectionService: MonsterSelectionService, private fb: FormBuilder, private formService: FormService, private IDBService: IndexedDBService, private animalService: AnimalService, private breedingService: BreedingServiceService) {}
 
-  
 
-  randNames = [
-    "Fluffy",
-    "Spot",
-    "Rex",
-    "Whiskers",
-    "Buddy",
-    "Mittens",
-    "Max",
-    "Luna"
-  ]
+  initForm() {
+    this.form = this.fb.group({
+      animalInput1: new FormControl(),
+      animalInput2: new FormControl()
+    }, { validators: [genderMismatchValidator, speciesMismatchValidator] });
+  }
+
 
   ngOnInit() {
     this.monsterSelectionService.getSelectedMonstersObservable().subscribe(selectedMonsters => {
@@ -112,7 +110,7 @@ reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<an
     $event.preventDefault();
     $event.stopPropagation();
     this.animalService.addAnimal({...this.generateRandomAnimal(), uuid: uuidv4()
-      ,name: this.randNames[Math.floor(Math.random() * this.randNames.length)]})
+      ,name: randSuperheroName()})
   
   }
 
@@ -143,7 +141,7 @@ reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<an
       breeding: {
         geneticTraits: [this.getRandomElement(["skill1", "skill2", "skill3"])],
         mutationChance: Math.floor(Math.random() * 101), // 0-100%
-        breedingCooldown: Math.floor(Math.random() * 86400) + 1, // 1 second to 1 day
+        breedingCooldown: Math.floor(Math.random() * 10) + 1, // 1 second to 1 day
       },
       appearance: {
         coloration: this.getRandomElement(["red", "blue", "green"]), // Example colors
@@ -172,104 +170,14 @@ reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<an
     return Object.entries(this.form.controls).map(([name, control]) => ({name, control}));
   }
 
-  combineInputsAndAddNew() {
-    const animal1 = this.form.get('animalInput1')?.value as Attributes;
-    const animal2 = this.form.get('animalInput2')?.value as Attributes;
-    if (animal1.physical.gender === animal2.physical.gender)
-    {
-      alert('Cannot combine two animals of the same gender');
-      return;
-    }
-
-
-    if (!animal1 || !animal2) {
-      console.error('One or both inputs are missing');
-      return;
-    }
-  
-    // Combine physical attributes
-    const combinedPhysical = {
-      gender: Gender.MALE, // Placeholder, you might want to handle this differently
-      size: this.getRandomElement(["small", "medium", "large"]), // Example strategy
-      weight: this.getRandomElement(["light", "heavy", "muscular"]), // Example strategy
-      bodyStructure: this.getRandomElement(["slim", "bulky"]), // Example strategy
-    };
-  
-    // Combine combat skills
-    const combinedCombatSkills = {
-      attackPower: Math.round((animal1.combatSkills.attackPower + animal2.combatSkills.attackPower) / 2),
-      defense: Math.round((animal1.combatSkills.defense + animal2.combatSkills.defense) / 2),
-      speed: this.getRandomElement(["slow", "average", "fast"]), // Ensure this matches AttributeShape
-      agility: this.getRandomElement(["low", "moderate", "high"]), // Ensure this matches AttributeShape
-      stamina: Math.round((animal1.combatSkills.stamina + animal2.combatSkills.stamina) / 2),
-    };
-  
-    // Combine elemental attributes
-    const combinedElemental = {
-      elementalAffinities: Array.from(new Set([...animal1.elemental.elementalAffinities, ...animal2.elemental.elementalAffinities])),
-      elementalAttacks: animal1.elemental.elementalAttacks || animal2.elemental.elementalAttacks,
-    };
-  
-    // Combine special abilities
-    const combinedSpecialAbilities = {
-      uniqueSkills: Array.from(new Set([...animal1.specialAbilities.uniqueSkills, ...animal2.specialAbilities.uniqueSkills])),
-      passiveTraits: Array.from(new Set([...animal1.specialAbilities.passiveTraits, ...animal2.specialAbilities.passiveTraits])),
-    };
-  
-    // Combine breeding attributes
-    const combinedBreeding = {
-      geneticTraits: Array.from(new Set([...animal1.breeding.geneticTraits, ...animal2.breeding.geneticTraits])),
-      mutationChance: Math.round((animal1.breeding.mutationChance + animal2.breeding.mutationChance) / 2),
-      breedingCooldown: Math.round((animal1.breeding.breedingCooldown + animal2.breeding.breedingCooldown) / 2),
-    };
-  
-    // Combine appearance (randomly select from either animal)
-    const combinedAppearance = {
-      coloration: this.getRandomElement([animal1.appearance.coloration, animal2.appearance.coloration]),
-      hornsOrSpikes: this.getRandomElement([animal1.appearance.hornsOrSpikes, animal2.appearance.hornsOrSpikes]),
-      skinTexture: this.getRandomElement([animal1.appearance.skinTexture, animal2.appearance.skinTexture]),
-    };
-  
-    // Combine behavioral attributes
-    const combinedBehavioral = {
-      temperament: this.getRandomElement([animal1.behavioral.temperament, animal2.behavioral.temperament]),
-      habitatPreference: Array.from(new Set([...animal1.behavioral.habitatPreference, ...animal2.behavioral.habitatPreference])),
-    };
-  
-    // Combine rarity and class (simplified strategy)
-    const combinedRarityAndClass = {
-      rarity: this.getRandomElement([animal1.rarityAndClass.rarity, animal2.rarityAndClass.rarity]), // Example strategy
-      class: this.getRandomElement([animal1.rarityAndClass.class, animal2.rarityAndClass.class]), // Example strategy
-    };
-  
-    // Combine breeding mechanics
-    const combinedBreedingMechanics = {
-      compatibility: Array.from(new Set([...animal1.breedingMechanics.compatibility, ...animal2.breedingMechanics.compatibility])),
-      offspringTraits: Array.from(new Set([...animal1.breedingMechanics.offspringTraits, ...animal2.breedingMechanics.offspringTraits])),
-      breedingBonuses: Array.from(new Set([...animal1.breedingMechanics.breedingBonuses, ...animal2.breedingMechanics.breedingBonuses])),
-    };
-  
-    // Create a new input with the combined values
-    const combinedAttributes: Attributes = {
-      // @ts-ignore
-      physical: combinedPhysical,
-      // @ts-ignore
-      combatSkills: combinedCombatSkills,
-      elemental: combinedElemental,
-      specialAbilities: combinedSpecialAbilities,
-      breeding: combinedBreeding,
-      appearance: combinedAppearance,
-      behavioral: combinedBehavioral,
-      rarityAndClass: combinedRarityAndClass,
-      breedingMechanics: combinedBreedingMechanics,
-    };
-  
-    // Add the new input to the form
-    this.form.addControl('combinedAnimalInput', new FormControl(combinedAttributes));
-  }
 
   onSubmit() {
-    this.combineInputsAndAddNew();
+    this.breedingService.submitBreedingPair(this.form?.value.animalInput1, this.form?.value.animalInput2);
+
+
+    // clear the form
+    this.monsterSelectionService.clearSelection();
+    this.form = this.fb.group({})
     //console.log(this.form?.value);
   }
 }

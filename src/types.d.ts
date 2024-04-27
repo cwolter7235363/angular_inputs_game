@@ -74,3 +74,15 @@ interface Attributes {
 interface ErrorMessages {
   [key: string]: string;
 }
+
+
+export type BreedingPod = {
+  uuid: string;
+  parents: Animal[];
+  offspring: Animal[];
+  errorMessage?: string
+  timeToHatch: number;
+  timeRemaining?: number;
+  countDown?: number;
+  breedingStartDateTime: Date;
+}

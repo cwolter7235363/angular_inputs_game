@@ -23,8 +23,17 @@ export class MonsterSelectionService {
     }
   }
 
-  deselectMonster(monster: Animal): void {
-    this.selectedMonsters = this.selectedMonsters.filter(m => m !== monster);
+  clearSelection(): void {
+    this.selectedMonsters = [];
+    // Update the BehaviorSubject with the new state
+    this.selectedMonstersSubject.next(this.selectedMonsters);
+  }
+  
+
+  deselectMonster(monster?: Animal): void {
+    if (!monster) return;
+    
+    this.selectedMonsters = this.selectedMonsters.filter(m => m.uuid !== monster.uuid);
     // Update the BehaviorSubject with the new state
     this.selectedMonstersSubject.next(this.selectedMonsters);
   }

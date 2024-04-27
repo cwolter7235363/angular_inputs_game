@@ -1,0 +1,5 @@
+<div *ngIf="breedingPods">
+    <div *ngFor="let pod of breedingPods" class="mb-4 p-2 border border-gray-200 rounded-lg">
+     <app-breeding-pod [pod]="pod"/>
+    </div>
+  </div>
