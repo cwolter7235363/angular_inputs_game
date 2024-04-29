@@ -2,56 +2,49 @@
     <p>{{monster?.uuid}}</p>
     <div>
         <img [src]="monster?.species?.image_url" alt="{{monster?.name}}" class="monster-image">
-        <h2>{{monster?.name}}</h2> <h2>{{monster?.species?.name}}</h2> <h2>{{getGenderString(monster?.physical?.gender)}}</h2>
+        <h2>{{monster?.name}}</h2> <h2>{{monster?.species?.name}}</h2> <h2>{{monster?.gender}}</h2>
     </div>
     <div class="attributes-grid">
         <div class="attribute-item">
-            <div><span class="attribute-icon rarity"></span><span class="attribute">Rarity:</span></div>
-            <div>{{monster?.rarityAndClass?.rarity}}</div>
+            <div><span class="attribute-icon species"></span><span class="attribute">Species:</span></div>
+            <div>{{monster?.species?.species}}</div>
         </div>
         <div class="attribute-item">
-            <div><span class="attribute-icon class"></span><span class="attribute">Class:</span></div>
-            <div>{{monster?.rarityAndClass?.class}}</div>
+            <div><span class="attribute-icon home-planet"></span><span class="attribute">Home Planet:</span></div>
+            <div>{{monster?.species?.homePlanet}}</div>
         </div>
         <div class="attribute-item">
-            <div><span class="attribute-icon elemental-affinities"></span><span class="attribute">Elemental Affinities:</span></div>
-            <div>{{monster?.elemental?.elementalAffinities?.join(', ')}}</div>
+            <div><span class="attribute-icon cycle-time"></span><span class="attribute">Cycle Time:</span></div>
+            <div>{{monster?.species?.cycleTime}} days</div>
         </div>
         <div class="attribute-item">
-            <div><span class="attribute-icon elemental-attacks"></span><span class="attribute">Elemental Attacks:</span></div>
-            <div>{{monster?.elemental?.elementalAttacks ? 'Yes' : 'No'}}</div>
+            <div><span class="attribute-icon description"></span><span class="attribute">Description:</span></div>
+            <div>{{monster?.species?.description}}</div>
         </div>
         <div class="attribute-item">
-            <div><span class="attribute-icon coloration"></span><span class="attribute">Coloration:</span></div>
-            <div>{{monster?.appearance?.coloration}}</div>
+            <div><span class="attribute-icon strength"></span><span class="attribute">Strength Bonus:</span></div>
+            <div>{{monster?.strength?.bonus}}</div>
+            <div>{{monster?.strength?.enumValue}}</div>
         </div>
         <div class="attribute-item">
-            <div><span class="attribute-icon physical-characteristics"></span><span class="attribute">Physical Characteristics:</span></div>
-            <div>{{monster?.physical?.size}}, {{monster?.physical?.weight}}, {{monster?.physical?.bodyStructure}}</div>
+            <div><span class="attribute-icon remarkability"></span><span class="attribute">Remarkability Bonus:</span></div>
+            <div>{{monster?.remarkability?.bonus}}</div>
         </div>
         <div class="attribute-item">
-            <div><span class="attribute-icon combat-skills"></span><span class="attribute">Combat Skills:</span></div>
-            <div>Attack Power: {{monster?.combatSkills?.attackPower}}, Defense: {{monster?.combatSkills?.defense}}, Speed: {{monster?.combatSkills?.speed}}, Agility: {{monster?.combatSkills?.agility}}, Stamina: {{monster?.combatSkills?.stamina}}</div>
+            <div><span class="attribute-icon mutation-chance"></span><span class="attribute">Mutation Chance Bonus:</span></div>
+            <div>{{monster?.mutationChance?.bonus}}</div>
         </div>
         <div class="attribute-item">
-            <div><span class="attribute-icon genetic-traits"></span><span class="attribute">Genetic Traits:</span></div>
-            <div>{{monster?.breeding?.geneticTraits?.join(', ')}}</div>
+            <div><span class="attribute-icon gestation-period"></span><span class="attribute">Gestation Period Bonus:</span></div>
+            <div>{{monster?.gestationPeriod?.bonus}}</div>
         </div>
         <div class="attribute-item">
-            <div><span class="attribute-icon mutation-chance"></span><span class="attribute">Mutation Chance:</span></div>
-            <div>{{monster?.breeding?.mutationChance}}%</div>
+            <div><span class="attribute-icon yield-bonus"></span><span class="attribute">Yield Bonus:</span></div>
+            <div>{{monster?.yieldBonus?.bonus}}</div>
         </div>
         <div class="attribute-item">
-            <div><span class="attribute-icon habitat-preference"></span><span class="attribute">Habitat Preference:</span></div>
-            <div>{{monster?.behavioral?.habitatPreference?.join(', ')}}</div>
-        </div>
-        <div class="attribute-item">
-            <div><span class="attribute-icon temperament"></span><span class="attribute">Temperament:</span></div>
-            <div>{{monster?.behavioral?.temperament}}</div>
-        </div>
-        <div class="attribute-item">
-            <div><span class="attribute-icon breeding-cooldown"></span><span class="attribute">Breeding Cooldown:</span></div>
-            <div>{{monster?.breeding?.breedingCooldown}} hours</div>
+            <div><span class="attribute-icon birth-timestamp"></span><span class="attribute">Birth Timestamp:</span></div>
+            <div>{{monster?.birthTimestamp  | date: 'medium'}}</div>
         </div>
     </div>
     <div>

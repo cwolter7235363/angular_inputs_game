@@ -46,9 +46,13 @@ export class BreedingServiceService {
   }
   createOffspringForPod(pod: BreedingPod) {
     // Create the offspring object
+    // @ts-ignore
+    const a = combineInputsAndAddNew(pod.parents[0], pod.parents[1]) as any[]; // Assuming combineInputsAndAddNew is a function that combines two monsters into a new one
+
+
     const offspring = {
       uuid: uuidv4(),
-      ...combineInputsAndAddNew(pod.parents[0], pod.parents[1]),
+      ...a,
       species: pod.parents[0].species,
       name: randSuperheroName()
       // Include other required properties with default values as necessary
@@ -129,7 +133,7 @@ export class BreedingServiceService {
         parents: [monster1, monster2],
         offspring: [],
         errorMessage: '',
-        timeToHatch: monster1.breeding.breedingCooldown + monster2.breeding.breedingCooldown, 
+        timeToHatch: monster1.gestationPeriod.value + monster2.gestationPeriod.value * 24, 
         breedingStartDateTime: new Date(),
         countDown: Infinity
       };

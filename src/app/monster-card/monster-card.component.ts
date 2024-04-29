@@ -4,10 +4,12 @@ import { MonsterSelectionService } from '../service/monster-selection-service/mo
 import { Gender } from '../animal-form/animal-form.component';
 import { IndexedDBService } from '../indexed-db.service';
 import { AnimalService } from '../animal-service.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-monster-card',
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './monster-card.component.html',
   styleUrls: ['./monster-card.component.css'] // Corrected from 'styleUrl' to 'styleUrls'
 })
@@ -27,15 +29,17 @@ export class MonsterCardComponent {
   releaseMonster(event: MouseEvent): void {
     event.stopPropagation(); // Prevent click event from bubbling up to the parent div
     if (this.monster && confirm(`Are you sure you want to release ${this.monster.name}?`)) {
-      this.AnimalService.deleteAnimal(this.monster.uuid)
       this.selectionService.deselectMonster(this.monster);
+      this.AnimalService.deleteAnimal(this.monster.uuid)
     }
 }
 
+  get stringifiedMonster(): string {
+    return JSON.stringify(this.monster, null, 2);
+  }
+
   getGenderString(gender?: Gender): string {
     if (gender === undefined) return ""
-    
-    
     return Gender[gender]; // This converts the enum value to its string representation
   }
 }

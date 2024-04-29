@@ -3,11 +3,10 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import 'zone.js';
 import { AnimalFormComponent } from "./app/animal-form/animal-form.component";
 import { AttributeInputComponent } from "./app/attribute-input/attribute-input.component";
-import { AnimalService } from './app/animal-service.service'; // Import AnimalService
+import { AnimalService } from './app/animal-service.service';
 import { CommonModule } from '@angular/common';
 import { MonsterCardComponent } from "./app/monster-card/monster-card.component";
-import { MonsterSelectionService } from './app/service/monster-selection-service/monster-selection-service.service';
-import {BreedingPodListComponent} from './app/breeding-pod-list/breeding-pod-list.component';
+import { BreedingPodListComponent } from './app/breeding-pod-list/breeding-pod-list.component';
 
 @Component({
     selector: 'app-root',
@@ -25,30 +24,40 @@ import {BreedingPodListComponent} from './app/breeding-pod-list/breeding-pod-lis
     imports: [AnimalFormComponent, AttributeInputComponent, CommonModule, MonsterCardComponent, BreedingPodListComponent]
 })
 export class App implements OnInit {
-animals: any[] = [];
-name = 'Angular';
-filteredAnimals: any[] = [];
+  animals: any[] = [];
+  name = 'Angular';
+  filteredAnimals: any[] = [];
 
+  constructor(private animalService: AnimalService) {}
 
-constructor(private animalService: AnimalService) {}
+  ngOnInit(): void {
+    this.animalService.animals$.subscribe(animals => {
+      this.animals = animals;
+      console.log('Loaded animals:', animals);
+    }, error => {
+      console.error('Failed to load animals:', error);
+    });
 
-ngOnInit(): void {
-  this.animalService.animals$.subscribe(animals => {
-    this.animals = animals;
-    console.log('Loaded animals:', animals);
-    // Update filteredAnimals right after animals are loaded
-    // this.updateFilteredAnimals();
-  }, error => {
-    console.error('Failed to load animals:', error);
-  });
+    this.animalService.filteredAnimals$.subscribe(filteredAnimals => {
+      this.filteredAnimals = filteredAnimals;
+      console.log('Filtered animals:', filteredAnimals);
+    }, error => {
+      console.error('Failed to load filtered animals:', error);
+    });
 
-  this.animalService.filteredAnimals$.subscribe(filteredAnimals => {
-    this.filteredAnimals = filteredAnimals;
-    console.log('Filtered animals:', filteredAnimals);
-  }, error => {
-    console.error('Failed to load filtered animals:', error);
-  });
-}
+    this.welcomeUser();
+  }
+
+  welcomeUser(): void {
+    const lastVisitDate = localStorage.getItem('lastVisitDate');
+    const currentDate = new Date().toDateString(); // Get current date as a string
+  
+    if (lastVisitDate !== currentDate) {
+      const msg = new SpeechSynthesisUtterance('Welcome to Ruks Animal Hoe');
+      window.speechSynthesis.speak(msg);
+      localStorage.setItem('lastVisitDate', currentDate); // Update the last visit date
+    }
+  }
 }
 
 bootstrapApplication(App);

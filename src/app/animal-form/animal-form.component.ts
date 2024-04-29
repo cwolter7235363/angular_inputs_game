@@ -14,6 +14,8 @@ import { AnimalService } from '../animal-service.service';
 import { v4 as uuidv4 } from 'uuid';
 import { randSuperheroName } from '@ngneat/falso';
 import { BreedingServiceService } from '../breeding-service.service';
+import { generate } from 'rxjs';
+import generateNewMonster from '../helpers/generateNewMonster';
 
 export enum Gender {
   MALE,
@@ -39,8 +41,7 @@ saveToIndexedDB(_t7: { name: string; control: import("@angular/forms").AbstractC
 
 }
 reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<any,any>; }) {
-    const newRandomAnimal = this.generateRandomAnimal();
-    _t7.control.setValue({name: randSuperheroName(), ...newRandomAnimal});
+    _t7.control.setValue(generateNewMonster());
 }
   form: FormGroup = new FormGroup({});
   stringifiedForm: any;
@@ -92,10 +93,6 @@ reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<an
   //   this.formService.setFormGroup(this.form);
   // }
 
-  getRandomElement<T>(array: T[]): T {
-    return array[Math.floor(Math.random() * array.length)];
-  }
-
   formErrors = {
     'genderMismatch': 'Animals cannot be of the same gender.',
     'speciesMismatch': 'These species are not compatible.'
@@ -109,61 +106,11 @@ reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<an
   addRandomAnimal($event: MouseEvent) {
     $event.preventDefault();
     $event.stopPropagation();
-    this.animalService.addAnimal({...this.generateRandomAnimal(), uuid: uuidv4()
-      ,name: randSuperheroName()})
-  
-  }
 
-  generateRandomAnimal(): Attributes {
-    return {
-      species: this.getRandomElement(MonsterData),
-      physical: {
-        gender: this.getRandomElement([Gender.MALE, Gender.FEMALE]),
-        size: this.getRandomElement(["small", "medium", "large"]) as AttributeShape,
-        weight: this.getRandomElement(["light", "heavy", "muscular"]),
-        bodyStructure: this.getRandomElement(["slim", "bulky"]),
-      },
-      combatSkills: {
-        attackPower: Math.floor(Math.random() * 100) + 1, // Assuming 1-100 range
-        defense: Math.floor(Math.random() * 100) + 1,
-        speed: this.getRandomElement(["slow", "average", "fast"]) as AttributeShape,
-        agility: this.getRandomElement(["low", "moderate", "high"]) as AttributeShape,
-        stamina: Math.floor(Math.random() * 100) + 1,
-      },
-      elemental: {
-        elementalAffinities: [this.getRandomElement(["fire", "water", "thunder", "ice", "earth"])],
-        elementalAttacks: Math.random() < 0.5,
-      },
-      specialAbilities: {
-        uniqueSkills: [this.getRandomElement(["skill1", "skill2", "skill3"])],
-        passiveTraits: [this.getRandomElement(["trait1", "trait2", "trait3"])],
-      },
-      breeding: {
-        geneticTraits: [this.getRandomElement(["skill1", "skill2", "skill3"])],
-        mutationChance: Math.floor(Math.random() * 101), // 0-100%
-        breedingCooldown: Math.floor(Math.random() * 10) + 1, // 1 second to 1 day
-      },
-      appearance: {
-        coloration: this.getRandomElement(["red", "blue", "green"]), // Example colors
-        hornsOrSpikes: this.getRandomElement(["horns", "spikes", "none"]),
-        skinTexture: this.getRandomElement(["smooth", "rough", "scaly"]),
-      },
-      behavioral: {
-        temperament: this.getRandomElement(["aggressive", "docile", "territorial"]),
-        habitatPreference: [this.getRandomElement(["fire", "water", "thunder", "ice", "earth"])],
-      },
-      rarityAndClass: {
-        rarity: this.getRandomElement(["common", "rare", "legendary"]),
-        class: this.getRandomElement(["elite", "boss"]),
-      },
-      breedingMechanics: {
-        compatibility: [this.getRandomElement(["speciesA", "speciesB"])],
-        offspringTraits: [this.getRandomElement(["skill1", "skill2", "skill3"])],
-        breedingBonuses: [this.getRandomElement(["bonus1", "bonus2"])],
-      },
-    }
-  }
+    
+    this.animalService.addAnimal(generateNewMonster());
   
+  }
 
 
   get formControlsArray() {

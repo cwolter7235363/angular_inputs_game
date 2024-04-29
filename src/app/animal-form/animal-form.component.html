@@ -15,8 +15,8 @@
       <ng-container *ngFor="let key of formControlsArray">
         <div>
           <app-attribute-input [controlKey]="key.name" [formRef]="form"></app-attribute-input>
-          <button class="button button-warning" (click)="reroll(key)">Reroll monster</button>
-          <button class="button button-secondary" (click)="saveToIndexedDB(key)">Save to IndexedDB</button>
+          <!-- <button class="button button-warning" (click)="reroll(key)">Reroll monster</button> -->
+          <!-- <button class="button button-secondary" (click)="saveToIndexedDB(key)">Save to IndexedDB</button> -->
       </div>  
     </ng-container>
     </div>
