@@ -1,9 +1,9 @@
-import { StrengthAttributeValues, RemarkabilityAttributeValues, MutationChanceAttributeValues, TrageZeitAttributeValue, YieldBonusAttributeValues } from "../AttributeConfig";
-import { AttributeDataMapping, StrengthAttributeWerte, Remarkability, MutationChance, TrageZeitAttributeWerte, YieldBonus, DnDMonster } from "../../types";
+import { StrengthAttributeValues, RemarkabilityAttributeValues, MutationChanceAttributeValues, TrageZeitAttributeValue, YieldBonusAttributeValues, EvolutionStage, DnDMonster } from "../AttributeConfig";
 import { v4 as uuidv4 } from 'uuid';
 import { randSuperheroName } from '@ngneat/falso';
 import MonsterData from "../resources/monsters.json";
 import { Gender } from "../animal-form/animal-form.component";
+import { AttributeDataMapping } from "../../types";
 
 
 // Corrected helper function to randomly select an attribute value based on chance
@@ -27,11 +27,16 @@ function getRandomElement<T>(array: T[]): T {
 
 // Function to generate a new monster
 function generateNewMonster(): DnDMonster {
+    const species = getRandomElement(MonsterData);
+  
     return {
         uuid: uuidv4(),
         name: randSuperheroName(),
+        // @ts-ignore
+        evolutionStage: EvolutionStage[Math.floor(Math.random() * 3) as 0 | 1 | 2] ,
         birthTimestamp: new Date(),
-        species: getRandomElement(MonsterData),
+        species,
+        baseSalePrice: species.baseSalePrice,
         // @ts-ignore
         strength: selectAttributeValue(StrengthAttributeValues),
           // @ts-ignore
@@ -40,6 +45,7 @@ function generateNewMonster(): DnDMonster {
         mutationChance: selectAttributeValue(MutationChanceAttributeValues),
           // @ts-ignore
         gestationPeriod: selectAttributeValue(TrageZeitAttributeValue),
+        cycleTime: species.cycleTime,
           // @ts-ignore
         yieldBonus: selectAttributeValue(YieldBonusAttributeValues),
                   // @ts-ignore

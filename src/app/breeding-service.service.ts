@@ -1,10 +1,11 @@
 import { Injectable, Injector } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
-import { BreedingPod } from '../types'; // Assuming BreedingPod is correctly defined in your types
+import { BreedingPod, DnDMonster } from '../types'; // Assuming BreedingPod is correctly defined in your types
 import { combineInputsAndAddNew } from './helpers/combineMonsters';
 import { randSuperheroName } from '@ngneat/falso';
 import { AnimalService } from './animal-service.service';
+import { genOffspring } from './helpers/generateOffspring';
 
 @Injectable({
   providedIn: 'root'
@@ -46,20 +47,11 @@ export class BreedingServiceService {
   }
   createOffspringForPod(pod: BreedingPod) {
     // Create the offspring object
-    // @ts-ignore
-    const a = combineInputsAndAddNew(pod.parents[0], pod.parents[1]) as any[]; // Assuming combineInputsAndAddNew is a function that combines two monsters into a new one
 
+    const a = genOffspring(pod.parents[0], pod.parents[1]) as DnDMonster; // Assuming combineInputsAndAddNew is a function that combines two monsters into a new one
 
-    const offspring = {
-      uuid: uuidv4(),
-      ...a,
-      species: pod.parents[0].species,
-      name: randSuperheroName()
-      // Include other required properties with default values as necessary
-    } as any; // Consider defining a proper type instead of using 'any'
-  
     // Update the passed pod's offspring array directly
-    const updatedPod = { ...pod, offspring: [...pod.offspring, offspring] };
+    const updatedPod = { ...pod, offspring: [...pod.offspring, a] };
   
     // Update the BehaviorSubject with the modified pod
     return updatedPod
@@ -91,7 +83,7 @@ export class BreedingServiceService {
         let remainingTime = (hatchDate.getTime() - now.getTime()) / 1000;
         remainingTime = Math.max(remainingTime, 0); // Ensure remaining time doesn't go below 0
         return { ...pod, countDown: remainingTime };
-      });
+      }) as BreedingPod[];
       this.breedingPodsSubject.next(updatedPods);
       this.savePodsToLocalStorage(); // Optionally save the updated pods to localStorage
     }, 1000); // Update every 10 seconds
@@ -131,7 +123,7 @@ export class BreedingServiceService {
       const newPod: BreedingPod = {
         uuid: uuidv4(), // Generate a unique ID for the new pod
         parents: [monster1, monster2],
-        offspring: [],
+        offspring: [] as DnDMonster[],
         errorMessage: '',
         timeToHatch: monster1.gestationPeriod.value + monster2.gestationPeriod.value * 24, 
         breedingStartDateTime: new Date(),

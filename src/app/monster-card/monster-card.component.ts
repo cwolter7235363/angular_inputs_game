@@ -5,13 +5,15 @@ import { Gender } from '../animal-form/animal-form.component';
 import { IndexedDBService } from '../indexed-db.service';
 import { AnimalService } from '../animal-service.service';
 import { CommonModule } from '@angular/common';
+import { EvolutionStepperComponent } from "../evolution-stepper/evolution-stepper.component";
 
 @Component({
-  selector: 'app-monster-card',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './monster-card.component.html',
-  styleUrls: ['./monster-card.component.css'] // Corrected from 'styleUrl' to 'styleUrls'
+    selector: 'app-monster-card',
+    standalone: true,
+    templateUrl: './monster-card.component.html',
+    styleUrls: ['./monster-card.component.css'] // Corrected from 'styleUrl' to 'styleUrls'
+    ,
+    imports: [CommonModule, EvolutionStepperComponent]
 })
 export class MonsterCardComponent {
   @Input() monster: Animal | undefined = undefined;

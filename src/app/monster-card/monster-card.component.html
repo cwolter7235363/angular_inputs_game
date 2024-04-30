@@ -1,8 +1,13 @@
-<div (click)="onMonsterClick()" [class.selected]="selectionService.isSelected(monster)" class="monster-card">
-    <p>{{monster?.uuid}}</p>
+<div (click)="onMonsterClick()" [class.selected]="selectionService.isSelected(monster)" class="monster-card gap-2">
+    <!-- <p>{{monster?.uuid}}</p> -->
+    <div class="flex-grow">
     <div>
         <img [src]="monster?.species?.image_url" alt="{{monster?.name}}" class="monster-image">
         <h2>{{monster?.name}}</h2> <h2>{{monster?.species?.name}}</h2> <h2>{{monster?.gender}}</h2>
+    </div>
+    <ng-container *ngIf="monster">
+        <app-evolution-stepper [monster]="monster"/>
+    </ng-container>
     </div>
     <div class="attributes-grid">
         <div class="attribute-item">

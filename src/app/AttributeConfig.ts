@@ -1,3 +1,5 @@
+import { Gender } from "./animal-form/animal-form.component";
+
 export enum EvolutionStage {
     baby,
     teen,
@@ -15,16 +17,21 @@ type SpeciesInfo = {
     
 
 export type DnDMonster = {
-    uuid: string;
-    name: string;
-    image: string;
-    species: SpeciesInfo;
-    evolutionStage: EvolutionStage;
-    enclosureCost: number;
-    baseSalePrice: number;
-    strength: AttributeDataMapping<StrengthAttributeWerte>;
-  
-  }
+  uuid: string;
+  name: string;
+  gender: Gender;
+  image: string;
+  birthTimestamp: Date;
+  species: SpeciesInfo;
+  evolutionStage: EvolutionStage;
+  enclosureCost: number;
+  baseSalePrice: number;
+  strength: AttributeValueWithOptionalValue; // Directly use the interface here
+  remarkability: AttributeValueWithOptionalValue;
+  mutationChance: AttributeValueWithOptionalValue;
+  gestationPeriod: AttributeValueWithOptionalValue;
+  yieldBonus: AttributeValueWithOptionalValue;
+}
   
   export type FarmMonster  = DnDMonster & {
       baseYield: number;

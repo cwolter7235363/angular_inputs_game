@@ -1,0 +1,20 @@
+<div class="flex items-center justify-between w-full">
+    <ng-container *ngFor="let stage of [0, 1, 2]; let i = index">
+      <!-- Circle for the stage -->
+      <div class="flex items-center">
+        <div class="w-10 h-10 rounded-full flex justify-center items-center text-white" 
+             [class.bg-green-500]="i < currentStage" 
+             [class.bg-orange-500]="i === currentStage" 
+             [class.bg-gray-200]="i > currentStage">
+          {{ EvolutionStage[i] }}
+        </div>
+      </div>
+      <!-- Progress bar between circles, except after the last circle -->
+      <div *ngIf="i < 2" class="flex-auto mx-2">
+        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div class="h-2 bg-green-500 rounded-full" 
+               [style.width]="'100%'"></div>
+        </div>
+      </div>
+    </ng-container>
+  </div>

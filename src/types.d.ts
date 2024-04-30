@@ -77,7 +77,7 @@ interface ErrorMessages {
 export type BreedingPod = {
   uuid: string;
   parents: Animal[];
-  offspring: Animal[];
+  offspring: DnDMonster[];
   errorMessage?: string
   timeToHatch: number;
   timeRemaining?: number;

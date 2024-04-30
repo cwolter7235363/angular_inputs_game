@@ -1,4 +1,4 @@
-import { StrengthAttributeValues, RemarkabilityAttributeValues, MutationChanceAttributeValues, TrageZeitAttributeValue, YieldBonusAttributeValues } from "../AttributeConfig";
+import { StrengthAttributeValues, RemarkabilityAttributeValues, MutationChanceAttributeValues, TrageZeitAttributeValue, YieldBonusAttributeValues, EvolutionStage } from "../AttributeConfig";
 import { AttributeDataMapping, StrengthAttributeWerte, Remarkability, MutationChance, TrageZeitAttributeWerte, YieldBonus, DnDMonster, Attributes, AttributeValueWithOptionalValue } from "../../types";
 import { v4 as uuidv4 } from 'uuid';
 import { rand, randSuperheroName } from '@ngneat/falso';
@@ -6,10 +6,12 @@ import MonsterData from "../resources/monsters.json";
 import { Gender } from "../animal-form/animal-form.component";
 import { ChildActivationEnd } from "@angular/router";
 
-export function genOffspring(animal1: DnDMonster, animal2: DnDMonster, ){
+export function genOffspring(animal1: DnDMonster, animal2: DnDMonster ) : DnDMonster{
     const child = {
         uuid: uuidv4(),
         name: randSuperheroName(),
+        image: animal1.image,
+
         birthTimestamp: new Date(),
         species: getRandomElement([animal1, animal2]).species,
         // @ts-ignore
@@ -23,9 +25,12 @@ export function genOffspring(animal1: DnDMonster, animal2: DnDMonster, ){
           // @ts-ignore
         yieldBonus: getRandomElement([animal1, animal2]).yieldBonus,
                   // @ts-ignore
-        gender: Gender[Math.floor(Math.random() * 2) as 0 | 1]
-    };
-    child.gestationPeriod = (Gender[child.gender as unknown as number] == Gender[child.gender as unknown as number] ? animal1.gestationPeriod : animal2.gestationPeriod);
+        gender: Gender[Math.floor(Math.random() * 2) as 0 | 1] as Gender,
+        evolutionStage: EvolutionStage.baby, 
+        enclosureCost: getRandomElement([animal1, animal2]).enclosureCost,
+        baseSalePrice: getRandomElement([animal1, animal2]).baseSalePrice,
+    } as DnDMonster;
+    child.gestationPeriod = (child.gender === animal1.gender ? animal1.gestationPeriod : animal2.gestationPeriod);
     if((Math.random() < child.mutationChance.bonus)){
        //get random attribute, increase by one if possible
     }
