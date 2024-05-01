@@ -48,20 +48,27 @@ export class AnimalService {
   private setupMaturingProcess() {
     setInterval(() => {
       const updatedAnimals = this.animalsSubject.getValue().map(monster => {
-        if (monster.evolutionStage === EvolutionStage.adult) {
+        // @ts-ignore
+        if (EvolutionStage[monster.evolutionStage] === EvolutionStage.adult) {
           return monster;
         }
         if (!monster.lastEvolutionTimestamp) {
           monster.lastEvolutionTimestamp = new Date(monster.birthTimestamp);
         }
-        const cycleTimeMilis = monster.species.cycleTime * 24 * 60 * 60 * 1000; // Corrected to milliseconds
+        const cycleTimeMilis = monster.species.cycleTime * 24 * 60 * 60 * 10; // Corrected to milliseconds
         const lastEvolutionTime = monster.lastEvolutionTimestamp instanceof Date ? monster.lastEvolutionTimestamp.getTime() : new Date(monster.lastEvolutionTimestamp).getTime();
         const timeSinceLastEvolution = Date.now() - lastEvolutionTime;
         const progressPercentage = Math.min((timeSinceLastEvolution / cycleTimeMilis) * 100, 100);
   
-        if (timeSinceLastEvolution >= cycleTimeMilis) {
+        if (timeSinceLastEvolution >= cycleTimeMilis || progressPercentage >= 1) {
           monster.lastEvolutionTimestamp = new Date(); // Update to current Date
-          monster.evolutionStage = (monster.evolutionStage + 1) % Object.keys(EvolutionStage).length / 2; // Ensure cycling through stages correctly
+          // Die Enums sind Fucked AF @ Christian vorsicht hier 
+          const stages = [EvolutionStage.baby, EvolutionStage.teen, EvolutionStage.adult];
+          let stageInt = EvolutionStage[monster.evolutionStage] // das hier ist int
+          // @ts-ignore
+          if (stageInt === 2) return monster;
+          // @ts-ignore
+          monster.evolutionStage = EvolutionStage[stages[stageInt + 1]];
           monster.progressTowardsNextEvolution = 0;
         } else {
           monster.progressTowardsNextEvolution = progressPercentage;

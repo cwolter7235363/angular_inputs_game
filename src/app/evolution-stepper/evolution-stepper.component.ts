@@ -17,11 +17,11 @@ EvolutionStage: typeof EvolutionStage = EvolutionStage;
   get currentStage() {
     return EvolutionStage[this.monster.evolutionStage as unknown as keyof typeof EvolutionStage]
   }
+  
 
 
   progressWidth(i: number) {
     // EvolutionStage[i] === EvolutionStage[this.monster.evolutionStage] ? (this.monster.progressTowardsNextEvolution + '%') : (this.monster.evolutionStage > i ? '100%' : '0%')
-    debugger
     const s = EvolutionStage[this.monster.evolutionStage];
     // @ts-ignore
     if ((i) === EvolutionStage[this.monster.evolutionStage])

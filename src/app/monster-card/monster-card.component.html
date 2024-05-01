@@ -1,5 +1,4 @@
 <div (click)="onMonsterClick()" [class.selected]="selectionService.isSelected(monster)" class="monster-card gap-2">
-    <!-- <p>{{monster?.uuid}}</p> -->
     <div class="flex-grow">
     <div>
         <img [src]="monster?.species?.image_url" alt="{{monster?.name}}" class="monster-image">
