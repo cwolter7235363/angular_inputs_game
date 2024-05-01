@@ -106,8 +106,6 @@ reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<an
   addRandomAnimal($event: MouseEvent) {
     $event.preventDefault();
     $event.stopPropagation();
-
-    
     this.animalService.addAnimal(generateNewMonster());
   
   }

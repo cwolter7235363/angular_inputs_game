@@ -28,7 +28,7 @@
         </div>
         <div class="attribute-item">
             <div><span class="attribute-icon strength"></span><span class="attribute">Strength Bonus:</span></div>
-            <div>{{monster?.strength?.bonus}}</div>
+            <!-- <div>{{monster?.strength?.bonus}}</div> -->
             <div>{{monster?.strength?.enumValue}}</div>
         </div>
         <div class="attribute-item">
@@ -47,12 +47,32 @@
             <div><span class="attribute-icon yield-bonus"></span><span class="attribute">Yield Bonus:</span></div>
             <div>{{monster?.yieldBonus?.bonus}}</div>
         </div>
-        <div class="attribute-item">
+        <!-- <div class="attribute-item">
             <div><span class="attribute-icon birth-timestamp"></span><span class="attribute">Birth Timestamp:</span></div>
-            <div>{{monster?.birthTimestamp  | date: 'medium'}}</div>
+        </div> -->
+        <button (click)="openSpeciesInfo" class="toggle-species-info z-50">Species Info</button>
+        <!-- Collapsible Section for Species Info -->
+        <div *ngIf="showSpeciesInfo" class="attributes-grid">
+            <div class="attribute-item">
+                <div><span class="attribute-icon species"></span><span class="attribute">Species:</span></div>
+                <div>{{monster?.species?.species}}</div>
+            </div>
+            <div class="attribute-item">
+                <div><span class="attribute-icon home-planet"></span><span class="attribute">Home Planet:</span></div>
+                <div>{{monster?.species?.homePlanet}}</div>
+            </div>
+            <div class="attribute-item">
+                <div><span class="attribute-icon cycle-time"></span><span class="attribute">Cycle Time:</span></div>
+                <div>{{monster?.species?.cycleTime}} days</div>
+            </div>
+            <div class="attribute-item">
+                <div><span class="attribute-icon description"></span><span class="attribute">Description:</span></div>
+                <div>{{monster?.species?.description}}</div>
+            </div>
         </div>
     </div>
-    <div>
-        <button class="button button-danger" (click)="releaseMonster($event)">Release</button>
-    </div>
+</div>
+<div>
+    <div>Birth moment {{monster?.birthTimestamp  | date: 'medium'}}</div>
+    <button class="button button-danger" (click)="releaseMonster($event)">Release</button>
 </div>

@@ -35,16 +35,22 @@ export class AnimalService {
     combineLatest([this.animals$, this.selectionService.getSelectedMonstersObservable(), this.breedingService.breedingPods$])
       .subscribe(([animals, selectedMonsters, breedingPods]) => {
         const breedingMonsters = breedingPods.flatMap(pod => pod.parents); // Flatten all monsters in pods
+        // Ensure we have a list of UUIDs for selected monsters for a more reliable comparison
+        const selectedMonsterUUIDs = selectedMonsters.map(monster => monster.uuid);
         // Filter out selected and breeding animals
-        const filtered = animals.filter(animal => !selectedMonsters.includes(animal) && !breedingMonsters.find(m => m.uuid === animal.uuid));
+        const filtered = animals.filter(animal => 
+          !selectedMonsterUUIDs.includes(animal.uuid) && // Check against UUIDs for selected monsters
+          !breedingMonsters.find(m => m.uuid === animal.uuid)); // Exclude breeding animals
         this.filteredAnimalsSubject.next(filtered);
       });
   }
 
 
   addAnimal(animal: any) {
+    debugger
     this.indexedDBService.addAnimal(animal).then(() => {
       this.loadInitialData(); // Reload the animals list to include the new animal
+      this.initializeFilteredAnimals(); // Reload the filtered animals list to exclude the new animal
     }).catch(error => {
       console.error('Failed to add animal:', error);
     });

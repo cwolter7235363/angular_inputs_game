@@ -17,8 +17,17 @@ import { EvolutionStepperComponent } from "../evolution-stepper/evolution-steppe
 })
 export class MonsterCardComponent {
   @Input() monster: Animal | undefined = undefined;
+  public showSpeciesInfo: boolean = false;
 
   constructor(protected selectionService: MonsterSelectionService, private IDBService: IndexedDBService, protected AnimalService: AnimalService) {}
+
+
+  openSpeciesInfo(event: TouchEvent): void {
+    event.stopImmediatePropagation();
+    event.stopPropagation();
+    event.preventDefault();
+    this.showSpeciesInfo = true;
+  }
 
   onMonsterClick(): void {
     if (this.monster) {
