@@ -1,6 +1,12 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
   "compileOnSave": false,
+  "include": [
+    "src/**/*.ts",
+    "src/types.ts", // Adjust the path as necessary
+    "src/global/types",
+    "src/global/types.d.ts" // Adjust the path as necessary
+  ],
   "compilerOptions": {
     "resolveJsonModule": true,
     "outDir": "./dist/out-tsc",
@@ -17,7 +23,7 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "ES2015",
+    "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
     "lib": ["ES2022", "dom"]

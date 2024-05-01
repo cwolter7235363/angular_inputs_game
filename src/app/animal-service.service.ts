@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest } from 'rxjs';
+import { BreedingServiceService } from './breeding-service.service';
 import { IndexedDBService } from './indexed-db.service';
 import { MonsterSelectionService } from './service/monster-selection-service/monster-selection-service.service';
-import { BreedingPod } from '../types';
-import { BreedingServiceService } from './breeding-service.service';
-
+import { BreedingPod, EvolutionStage } from '../types';
 @Injectable({
   providedIn: 'root'
 })
@@ -20,6 +19,7 @@ export class AnimalService {
   constructor(private indexedDBService: IndexedDBService, private selectionService: MonsterSelectionService, private breedingService: BreedingServiceService) {
     this.loadInitialData();
     this.initializeFilteredAnimals();
+    this.setupMaturingProcess();
   }
 
   private async loadInitialData() {
@@ -45,12 +45,44 @@ export class AnimalService {
       });
   }
 
+  private setupMaturingProcess() {
+    setInterval(() => {
+      const updatedAnimals = this.animalsSubject.getValue().map(monster => {
+        if (monster.evolutionStage === EvolutionStage.adult) {
+          return monster;
+        }
+        if (!monster.lastEvolutionTimestamp) {
+          monster.lastEvolutionTimestamp = new Date(monster.birthTimestamp);
+        }
+        const cycleTimeMilis = monster.species.cycleTime * 24 * 60 * 60 * 1000; // Corrected to milliseconds
+        const lastEvolutionTime = monster.lastEvolutionTimestamp instanceof Date ? monster.lastEvolutionTimestamp.getTime() : new Date(monster.lastEvolutionTimestamp).getTime();
+        const timeSinceLastEvolution = Date.now() - lastEvolutionTime;
+        const progressPercentage = Math.min((timeSinceLastEvolution / cycleTimeMilis) * 100, 100);
+  
+        if (timeSinceLastEvolution >= cycleTimeMilis) {
+          monster.lastEvolutionTimestamp = new Date(); // Update to current Date
+          monster.evolutionStage = (monster.evolutionStage + 1) % Object.keys(EvolutionStage).length / 2; // Ensure cycling through stages correctly
+          monster.progressTowardsNextEvolution = 0;
+        } else {
+          monster.progressTowardsNextEvolution = progressPercentage;
+        }
+  
+        return monster;
+      });
+  
+      this.animalsSubject.next(updatedAnimals);
+      updatedAnimals.forEach(monster => this.updateAnimal(monster));
+    }, 3000); // Execute every 3000ms (3 seconds)
+  }
+
+
+
+
 
   addAnimal(animal: any) {
-    debugger
     this.indexedDBService.addAnimal(animal).then(() => {
       this.loadInitialData(); // Reload the animals list to include the new animal
-      this.initializeFilteredAnimals(); // Reload the filtered animals list to exclude the new animal
+      this.initializeFilteredAnimals(); // Reload the filtered animals list to exclude the selece animals
     }).catch(error => {
       console.error('Failed to add animal:', error);
     });

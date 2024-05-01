@@ -3,7 +3,6 @@ import { BreedingPod } from '../../types';
 import { BreedingServiceService } from '../breeding-service.service';
 import { CommonModule } from '@angular/common';
 import { RoundPipe } from '../round.pipe';
-import { Direction } from '../round.pipe';
 import { BreedingPodComponent } from "../breeding-pod/breeding-pod.component";
 
 

@@ -9,7 +9,7 @@
         <app-evolution-stepper [monster]="monster"/>
     </ng-container>
     </div>
-    <div class="attributes-grid">
+    <div class="attributes-grid flex-grow">
         <div class="attribute-item">
             <div><span class="attribute-icon species"></span><span class="attribute">Species:</span></div>
             <div>{{monster?.species?.species}}</div>
@@ -22,10 +22,10 @@
             <div><span class="attribute-icon cycle-time"></span><span class="attribute">Cycle Time:</span></div>
             <div>{{monster?.species?.cycleTime}} days</div>
         </div>
-        <div class="attribute-item">
+        <!-- <div class="attribute-item">
             <div><span class="attribute-icon description"></span><span class="attribute">Description:</span></div>
             <div>{{monster?.species?.description}}</div>
-        </div>
+        </div> -->
         <div class="attribute-item">
             <div><span class="attribute-icon strength"></span><span class="attribute">Strength Bonus:</span></div>
             <!-- <div>{{monster?.strength?.bonus}}</div> -->
@@ -70,6 +70,7 @@
                 <div>{{monster?.species?.description}}</div>
             </div>
         </div>
+        <p>{{monster?.progressTowardsNextEvolution}}</p>
     </div>
 </div>
 <div>

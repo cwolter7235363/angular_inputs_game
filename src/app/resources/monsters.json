@@ -5,6 +5,7 @@
     "species": "Wampa",
     "baseSalePrice": 1000,
     "homePlanet": "Hoth",
+    "enclosureCost": 1000,
     "cycleTime": 3,
     "description": "Snow-dwelling predator with white fur and sharp claws, known for attacking unwary travelers on Hoth.",
     "image_url": "https://static.wikia.nocookie.net/starwars/images/d/d0/SkywalkerWampa.jpg"

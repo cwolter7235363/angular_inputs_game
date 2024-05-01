@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { BreedingPod } from '../../types';
+
 import { BreedingServiceService } from '../breeding-service.service';
 import { CommonModule } from '@angular/common';
 import { Direction, RoundPipe } from '../round.pipe';
-import { Gender } from '../animal-form/animal-form.component';
+import { BreedingPod, Gender } from '../../types';
+
 
 @Component({
     selector: 'app-breeding-pod',

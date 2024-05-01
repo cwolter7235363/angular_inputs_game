@@ -2,10 +2,9 @@ import { Injectable, Injector } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { BreedingPod, DnDMonster } from '../types'; // Assuming BreedingPod is correctly defined in your types
-import { combineInputsAndAddNew } from './helpers/combineMonsters';
-import { randSuperheroName } from '@ngneat/falso';
 import { AnimalService } from './animal-service.service';
 import { genOffspring } from './helpers/generateOffspring';
+
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +13,14 @@ export class BreedingServiceService {
   private breedingPodsSubject = new BehaviorSubject<BreedingPod[]>([]);
   public breedingPods$ = this.breedingPodsSubject.asObservable();
   private _animalService: AnimalService | undefined;
+  private static intervalSet = false; // Static variable to track interval setup
+
 
   constructor(private injector: Injector) {
     this.loadPodsFromLocalStorage(); // Load initial pods on service initialization
-    this.updateTimeToHatch(); // Start the timer to update time to hatch
+    if (!BreedingServiceService.intervalSet) { // Check if the interval has not been set
+      this.updateTimeToHatch(); // Start the timer to update time to hatch
+    }
   }
 
   private get animalService(): AnimalService {
@@ -62,6 +65,7 @@ export class BreedingServiceService {
       return; // No pods to update
     }
     setInterval(() => {
+      BreedingServiceService.intervalSet = true; // Mark that the interval has been set
       const currentPods = this.breedingPodsSubject.getValue();
       const now = new Date(); // Get the current time
       const updatedPods = currentPods.map(pod => {
@@ -86,7 +90,7 @@ export class BreedingServiceService {
       }) as BreedingPod[];
       this.breedingPodsSubject.next(updatedPods);
       this.savePodsToLocalStorage(); // Optionally save the updated pods to localStorage
-    }, 1000); // Update every 10 seconds
+    }, 1000); // Update every 1 seconds
   }
 
   public breakBreedingPod(podId: string) {

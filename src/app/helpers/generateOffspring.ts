@@ -1,16 +1,14 @@
-import { StrengthAttributeValues, RemarkabilityAttributeValues, MutationChanceAttributeValues, TrageZeitAttributeValue, YieldBonusAttributeValues, EvolutionStage } from "../AttributeConfig";
-import { AttributeDataMapping, StrengthAttributeWerte, Remarkability, MutationChance, TrageZeitAttributeWerte, YieldBonus, DnDMonster, Attributes, AttributeValueWithOptionalValue } from "../../types";
+import { randSuperheroName } from '@ngneat/falso';
 import { v4 as uuidv4 } from 'uuid';
-import { rand, randSuperheroName } from '@ngneat/falso';
-import MonsterData from "../resources/monsters.json";
-import { Gender } from "../animal-form/animal-form.component";
-import { ChildActivationEnd } from "@angular/router";
+import { MutationChanceAttributeValues } from "../AttributeConfig";
+import { DnDMonster, EvolutionStage } from '../../types';
+import { AttributeValueWithOptionalValue } from '../../types';
+
 
 export function genOffspring(animal1: DnDMonster, animal2: DnDMonster ) : DnDMonster{
     const child = {
         uuid: uuidv4(),
         name: randSuperheroName(),
-        image: animal1.image,
 
         birthTimestamp: new Date(),
         species: getRandomElement([animal1, animal2]).species,
@@ -26,6 +24,7 @@ export function genOffspring(animal1: DnDMonster, animal2: DnDMonster ) : DnDMon
         yieldBonus: getRandomElement([animal1, animal2]).yieldBonus,
                   // @ts-ignore
         gender: Gender[Math.floor(Math.random() * 2) as 0 | 1] as Gender,
+        progressTowardsNextEvolution: 0,
         evolutionStage: EvolutionStage.baby, 
         enclosureCost: getRandomElement([animal1, animal2]).enclosureCost,
         baseSalePrice: getRandomElement([animal1, animal2]).baseSalePrice,

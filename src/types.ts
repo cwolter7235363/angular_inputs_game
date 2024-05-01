@@ -1,5 +1,3 @@
-import { Gender } from "./app/animal-form/animal-form.component";
-
 export type Animal = DnDMonster | FarmMonster;
 
 type SpeciesInfo = {
@@ -11,17 +9,23 @@ homePlanet: string;
 image_url: string;
 }
 
-type AttributeShape = "small" | "medium" | "large" | "light" | "heavy" | "muscular" | "slim" | "bulky" | "slow" | "average" | "fast" | "low" | "moderate" | "high";
-type CombatSkillShape = "positive integer";
-type ElementalShape = "fire" | "water" | "thunder" | "ice" | "earth";
-type SpecialAbilityShape = "skill1" | "skill2" | "skill3" | "trait1" | "trait2" | "trait3";
-type BreedingShape = "percentage (0-100)" | "positive integer (seconds)";
-type AppearanceShape = "color name";
-type BehavioralShape = "aggressive" | "docile" | "territorial";
-type RarityAndClassShape = "common" | "rare" | "legendary" | "elite" | "boss";
-type BreedingMechanicsShape = "speciesA" | "speciesB" | "bonus1" | "bonus2";
 
-interface Attributes {
+export enum Gender {
+  MALE,
+  FEMALE
+}
+
+export type AttributeShape = "small" | "medium" | "large" | "light" | "heavy" | "muscular" | "slim" | "bulky" | "slow" | "average" | "fast" | "low" | "moderate" | "high";
+export type CombatSkillShape = "positive integer";
+export type ElementalShape = "fire" | "water" | "thunder" | "ice" | "earth";
+export type SpecialAbilityShape = "skill1" | "skill2" | "skill3" | "trait1" | "trait2" | "trait3";
+export type BreedingShape = "percentage (0-100)" | "positive integer (seconds)";
+export type AppearanceShape = "color name";
+export type BehavioralShape = "aggressive" | "docile" | "territorial";
+export type RarityAndClassShape = "common" | "rare" | "legendary" | "elite" | "boss";
+export type BreedingMechanicsShape = "speciesA" | "speciesB" | "bonus1" | "bonus2";
+
+export interface Attributes {
   species: SpeciesInfo;
   physical: {
     gender: Gender;
@@ -86,16 +90,15 @@ export type BreedingPod = {
 }
 
 export enum EvolutionStage {
-  baby,
-  teen,
-  adult
+  baby = 0,
+  teen = 1,
+  adult = 2
 }
 
 export type DnDMonster = {
   uuid: string;
   name: string;
   gender: Gender;
-  image: string;
   birthTimestamp: Date;
   species: SpeciesInfo;
   evolutionStage: EvolutionStage;
@@ -106,15 +109,13 @@ export type DnDMonster = {
   mutationChance: AttributeValueWithOptionalValue;
   gestationPeriod: AttributeValueWithOptionalValue;
   yieldBonus: AttributeValueWithOptionalValue;
+  lastEvolutionTimestamp: Date;
+  progressTowardsNextEvolution: number;
 }
 
 export type FarmMonster = DnDMonster & {
   baseYield: number;
   count: number;
-}
-
-export interface Attribute<T> {
-  bezeichnung: string;
 }
 
 export enum StrengthAttributeWerte {
@@ -169,15 +170,15 @@ interface AttributeValueBase {
 }
 
 // Extend the base for cases where 'value' is also present
-interface AttributeValueWithOptionalValue extends AttributeValueBase {
+export interface AttributeValueWithOptionalValue extends AttributeValueBase {
   value?: number;
 }
 // Use a generic mapped type for flexibility
-type AttributeDataMapping<T extends string | number | symbol> = {
+export type AttributeDataMapping<T extends string | number | symbol> = {
   [K in T]: AttributeValueWithOptionalValue;
 };
 
 
-interface Attribute<T> {
+export interface Attribute<T> {
   value: T;
-}
+} 

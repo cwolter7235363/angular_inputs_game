@@ -1,11 +1,8 @@
-import { StrengthAttributeValues, RemarkabilityAttributeValues, MutationChanceAttributeValues, TrageZeitAttributeValue, YieldBonusAttributeValues, EvolutionStage, DnDMonster } from "../AttributeConfig";
+import { StrengthAttributeValues, RemarkabilityAttributeValues, MutationChanceAttributeValues, TrageZeitAttributeValue, YieldBonusAttributeValues } from "../AttributeConfig";
 import { v4 as uuidv4 } from 'uuid';
 import { randSuperheroName } from '@ngneat/falso';
 import MonsterData from "../resources/monsters.json";
-import { Gender } from "../animal-form/animal-form.component";
-import { AttributeDataMapping } from "../../types";
-
-
+import { AttributeDataMapping, DnDMonster, EvolutionStage,Gender} from "../../types";
 // Corrected helper function to randomly select an attribute value based on chance
 function selectAttributeValue<T extends string | number | symbol>(attributeValues: AttributeDataMapping<T>): { bonus: number; chance: number; value?: number } | null {
         // @ts-ignore
@@ -28,17 +25,21 @@ function getRandomElement<T>(array: T[]): T {
 // Function to generate a new monster
 function generateNewMonster(): DnDMonster {
     const species = getRandomElement(MonsterData);
-  
-    return {
+    const birthTimestamp = new Date();
+    const data =  {
         uuid: uuidv4(),
         name: randSuperheroName(),
         // @ts-ignore
-        evolutionStage: EvolutionStage[Math.floor(Math.random() * 3) as 0 | 1 | 2] ,
-        birthTimestamp: new Date(),
+        evolutionStage: EvolutionStage[Math.floor(Math.random() * 3) as 0 | 1 | 2],
+        lastEvolutionTimestamp: birthTimestamp, 
+        birthTimestamp,
+        enclosureCost: species.enclosureCost,
+        species:
         species,
         baseSalePrice: species.baseSalePrice,
         // @ts-ignore
         strength: selectAttributeValue(StrengthAttributeValues),
+        progressTowardsNextEvolution: 0,
           // @ts-ignore
         remarkability: selectAttributeValue(RemarkabilityAttributeValues),
           // @ts-ignore
@@ -51,6 +52,8 @@ function generateNewMonster(): DnDMonster {
                   // @ts-ignore
         gender: Gender[Math.floor(Math.random() * 2) as 0 | 1]
     };
+    // @ts-ignore
+    return data
 }
 
 export default generateNewMonster;

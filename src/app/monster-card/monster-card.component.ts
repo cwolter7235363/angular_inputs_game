@@ -1,11 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { Animal } from '../../types';
 import { MonsterSelectionService } from '../service/monster-selection-service/monster-selection-service.service';
-import { Gender } from '../animal-form/animal-form.component';
 import { IndexedDBService } from '../indexed-db.service';
 import { AnimalService } from '../animal-service.service';
 import { CommonModule } from '@angular/common';
 import { EvolutionStepperComponent } from "../evolution-stepper/evolution-stepper.component";
+import { Animal, Gender } from '../../types';
 
 @Component({
     selector: 'app-monster-card',

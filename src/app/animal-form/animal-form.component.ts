@@ -16,11 +16,7 @@ import { randSuperheroName } from '@ngneat/falso';
 import { BreedingServiceService } from '../breeding-service.service';
 import { generate } from 'rxjs';
 import generateNewMonster from '../helpers/generateNewMonster';
-
-export enum Gender {
-  MALE,
-  FEMALE
-}
+import { maturityValidator } from '../validators/MaturityValidator';
 
 @Component({
   selector: 'app-animal-form',
@@ -54,7 +50,7 @@ reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<an
     this.form = this.fb.group({
       animalInput1: new FormControl(),
       animalInput2: new FormControl()
-    }, { validators: [genderMismatchValidator, speciesMismatchValidator] });
+    }, { validators: [genderMismatchValidator, speciesMismatchValidator, maturityValidator] });
   }
 
 
@@ -95,7 +91,8 @@ reroll(_t7: { name: string; control: import("@angular/forms").AbstractControl<an
 
   formErrors = {
     'genderMismatch': 'Animals cannot be of the same gender.',
-    'speciesMismatch': 'These species are not compatible.'
+    'speciesMismatch': 'These species are not compatible.',
+    'evolutionStageMismatch': 'Both animals must be adults.'
   };
    
   getFormErrorKeys() {
