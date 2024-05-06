@@ -1,7 +1,7 @@
 import { randSuperheroName } from '@ngneat/falso';
 import { v4 as uuidv4 } from 'uuid';
 import { MutationChanceAttributeValues } from "../AttributeConfig";
-import { DnDMonster, EvolutionStage } from '../../types';
+import { DnDMonster, EvolutionStage, Gender } from '../../types';
 import { AttributeValueWithOptionalValue } from '../../types';
 
 
@@ -22,10 +22,11 @@ export function genOffspring(animal1: DnDMonster, animal2: DnDMonster ) : DnDMon
         gestationPeriod: getRandomElement([animal1, animal2]).gestationPeriod,
           // @ts-ignore
         yieldBonus: getRandomElement([animal1, animal2]).yieldBonus,
-                  // @ts-ignore
+        // @ts-ignore
         gender: Gender[Math.floor(Math.random() * 2) as 0 | 1] as Gender,
         progressTowardsNextEvolution: 0,
-        evolutionStage: EvolutionStage.baby, 
+          // @ts-ignore
+        evolutionStage: 'baby' as EvolutionStage, 
         enclosureCost: getRandomElement([animal1, animal2]).enclosureCost,
         baseSalePrice: getRandomElement([animal1, animal2]).baseSalePrice,
     } as DnDMonster;

@@ -104,19 +104,30 @@ export class AnimalService {
       // remove the animal from the selection service
       this.selectionService.deselectMonster(this.selectionService.getSelectedMonsters().find(animal => animal.uuid === uuid));
       // remove the animal from the list of animals and or the filtered animals
-      this.selectionService.getSelectedMonsters().find(animal => animal.uuid === uuid) ? this.loadInitialData() : this.filteredAnimalsSubject.next(this.filteredAnimalsSubject.getValue().filter(animal => animal.uuid !== uuid));
-      
-      this.loadInitialData(); // Reload the animals list to reflect the deletion
+      //this.selectionService.getSelectedMonsters().find(animal => animal.uuid === uuid) ? this.loadInitialData() : this.filteredAnimalsSubject.next(this.filteredAnimalsSubject.getValue().filter(animal => animal.uuid !== uuid));
     }).catch(error => {
       console.error('Failed to delete animal:', error);
+    }).finally(() => {
+      this.loadInitialData(); // Reload the animals list to reflect the deletion
     });
   }
 
   updateAnimal(animal: any) {
-    this.indexedDBService.updateRecord(animal).then(() => {
-      this.loadInitialData(); // Reload the animals list to reflect the update
-    }).catch(error => {
-      console.error('Failed to update animal:', error);
-    });
+    // Check if the animal still exists in the animalsSubject
+    const existingAnimal = this.animalsSubject.getValue().find(a => a.uuid === animal.uuid);
+    if (existingAnimal) {
+      this.indexedDBService.updateRecord(animal).then(() => {
+        this.loadInitialData(); // Reload the animals list to reflect the update
+      }).catch(error => {
+        console.error('Failed to update animal:', error);
+      });
+    } else {
+      // If the animal doesn't exist in the animalsSubject, delete it from the database
+      this.indexedDBService.deleteAnimal(animal.uuid).then(() => {
+        console.log(`Animal with uuid ${animal.uuid} was not found in animalsSubject and has been deleted from the database.`);
+      }).catch(error => {
+        console.error('Failed to delete animal:', error);
+      });
+    }
   }
 }
