@@ -1,5 +1,14 @@
 [
-
+  {
+    "name": "Nexu",
+    "cycleTime": 6,
+    "enclosureCost": 1000,
+    "baseSalePrice": 1000,
+    "species": "Nexu",
+    "homeworld": "Cholganna",
+    "description": "Agile, feline creature with sharp teeth and claws, often used as a hunting beast.",
+    "image_url": "https://static.wikia.nocookie.net/starwars/images/0/0a/Nexu2-SWE.png"
+  },
   {
     "name": "Wampa",
     "species": "Wampa",

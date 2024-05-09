@@ -56,13 +56,14 @@ export class AnimalService {
           monster.lastEvolutionTimestamp = new Date(monster.birthTimestamp);
         }
         const cycleTimeMilis = monster.species.cycleTime * 24 * 60 * 60 * 10; // Corrected to milliseconds
-        const lastEvolutionTime = monster.lastEvolutionTimestamp instanceof Date ? monster.lastEvolutionTimestamp.getTime() : new Date(monster.lastEvolutionTimestamp).getTime();
-        const timeSinceLastEvolution = Date.now() - lastEvolutionTime;
-        const progressPercentage = Math.min((timeSinceLastEvolution / cycleTimeMilis) * 100, 100);
   
-        if (timeSinceLastEvolution >= cycleTimeMilis || progressPercentage >= 1) {
-          monster.lastEvolutionTimestamp = new Date(); // Update to current Date
-          // Die Enums sind Fucked AF @ Christian vorsicht hier 
+        let lastEvolutionTime = monster.lastEvolutionTimestamp instanceof Date ? monster.lastEvolutionTimestamp.getTime() : new Date(monster.lastEvolutionTimestamp).getTime();
+        let timeSinceLastEvolution = Date.now() - lastEvolutionTime;
+        let progressPercentage = Math.min((timeSinceLastEvolution / cycleTimeMilis) * 100, 100);
+  
+        // Keep evolving the monster as long as it's eligible
+        while (timeSinceLastEvolution >= cycleTimeMilis || progressPercentage >= 1) {
+          monster.lastEvolutionTimestamp = new Date(lastEvolutionTime + cycleTimeMilis); // Update to the time of this evolution
           const stages = [EvolutionStage.baby, EvolutionStage.teen, EvolutionStage.adult];
           let stageInt = EvolutionStage[monster.evolutionStage] // das hier ist int
           // @ts-ignore
@@ -70,9 +71,15 @@ export class AnimalService {
           // @ts-ignore
           monster.evolutionStage = EvolutionStage[stages[stageInt + 1]];
           monster.progressTowardsNextEvolution = 0;
-        } else {
-          monster.progressTowardsNextEvolution = progressPercentage;
+  
+          // Calculate the time and progress for the next potential evolution
+          lastEvolutionTime = monster.lastEvolutionTimestamp.getTime();
+          timeSinceLastEvolution = Date.now() - lastEvolutionTime;
+          progressPercentage = Math.min((timeSinceLastEvolution / cycleTimeMilis) * 100, 100);
         }
+  
+        // If the monster is not yet ready for the next evolution, update the progress
+        monster.progressTowardsNextEvolution = progressPercentage;
   
         return monster;
       });
