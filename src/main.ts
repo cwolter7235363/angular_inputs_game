@@ -7,6 +7,8 @@ import { AnimalService } from './app/animal-service.service';
 import { CommonModule } from '@angular/common';
 import { MonsterCardComponent } from "./app/monster-card/monster-card.component";
 import { BreedingPodListComponent } from './app/breeding-pod-list/breeding-pod-list.component';
+import { provideRouter } from '@angular/router';
+import routeConfig from './app/routes';
 
 @Component({
     selector: 'app-root',
@@ -60,4 +62,8 @@ export class App implements OnInit {
   }
 }
 
-bootstrapApplication(App);
+bootstrapApplication(App, {
+  providers:[
+    provideRouter(routeConfig)
+  ]
+});
