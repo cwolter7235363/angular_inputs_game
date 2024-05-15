@@ -62,8 +62,4 @@ export class App implements OnInit {
   }
 }
 
-bootstrapApplication(App, {
-  providers:[
-    provideRouter(routeConfig)
-  ]
-});
+bootstrapApplication(App);
